@@ -73,7 +73,7 @@ io.on('connection', function(socket){
 
     console.log(`User: ${socket.id} disconnected...`);
     setTimeout(function () {
-            if (player.disconnected) playerManager.deleteByUID(uid);
+          if (player.disconnected) playerManager.deleteByUID(uid);
         }, 10000);
     playerManager.printState();
   });
@@ -83,21 +83,28 @@ io.on('connection', function(socket){
       console.log("REGISTRATION");
       console.log("USER:",socket.id, "MSG:", uid);
 
-      if (playerManager.find(uid)) {
-      playerManager.addToQueue(socket.id);
-      playerManager.sendMessage(socket.id, "Added to queue...");
-      playerManager.printState();
-    } else {
-      console.log("Empty registration");
+      if (playerManager.findByUID(uid)) {
+        playerManager.updateSocket(uid, socket.id);
+      } else {
+        playerManager.addToQueue({
+          socketId: socket.id,
+          uid: uid
+        });
+        playerManager.sendMessage(socket.id, "Added to queue...");
+        playerManager.printState();
+      }
     }
+    else {
 
+        console.log("Empty registration");
+    }
   }
 
   // socket.on('draw-card', function (from, msg) {
 
   // });
 
-});
+};
 
 
 
