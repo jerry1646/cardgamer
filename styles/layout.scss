@@ -1,7 +1,71 @@
 body {
   background-color: #EEE;
-
-  h1 {
-    color: #244751;
-  }
 }
+
+.wargamecontainer {
+  height: 600px;
+  width:600px;
+  background-color: grey;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.stats {
+  padding-top: 20px;
+  height: 200px;
+  width:100px;
+  background-color: green;
+  margin: auto;
+}
+
+#middlefield{
+  height: 400px;
+}
+#p1hand, #p2hand {
+  // margin: auto;
+  // float: top;
+  background-color: rgb(138, 138, 138);
+  height: 200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  padding-bottom:: 20px;
+}
+#p2card {
+  width: 75px;
+  height: auto;
+  margin: auto;
+}
+
+#p1card, #p1cardimg {
+  width: 75px;
+  height: auto;
+  margin: auto;
+  // float: bottom;
+  // display: flex;
+  // flex-direction: column;
+}
+
+#p1card:hover {
+  border: white 1px solid;
+}
+// #nav-bar {
+//   height: 80px;
+//   position: fixed;
+//   top: 0;
+//   width: 100%;
+//   background-color: #00a087;
+//   color: #e8fdff;
+//   padding-left: 2em;
+// }
+
+// #nav-bar h1 {
+//   color: #244751;
+//   padding-left: 10px;
+//   float: left;
+//   font-size: 2em;
+//   line-height: 80px
+// }
