@@ -60,52 +60,107 @@ const server = app.listen(PORT, () => {
 //##################################################
 var io = require('socket.io').listen(server);
 
-let playerManager = require('./lib/socket-manager')(io);
+let socketManager = require('./lib/socket-manager')(io);
+let queueManager = require('./lib/queue-manager')(io);
+let gameManager = require('./lib/game-manager')(io);
 
-io.on('connection', function(socket){
-  let player = null;
+io.on('connection', function(socket) {
 
-  console.log(`New user: ${socket.id} connected...`);
-  playerManager.printState();
+  let playerStatus = {/* CONNECTION DROP HANDLER */};
+  console.log(`Socket: ${socket.id} connected...`);
 
   socket.on('disconnect', function() {
-    player.disconnected = true;
+    playerStatus.disconnected = true;
 
-    console.log(`User: ${socket.id} disconnected...`);
     setTimeout(function () {
-          if (player.disconnected) playerManager.deleteByUID(uid);
+          if (playerStatus.disconnected) {
+            console.log(`-->DISCONNECTED: ${player.uid} - ${socket.id}`);
+            //SET PLAYER TO DISCONNECTED FOR ALL OTHER OBJECTS IN CODE
+            socketManager.findBySID(socket.id).connected = false;
+            //REMOVE PLAYER REFERENCE FROM SOCKET MANAGER
+            socketManager.deleteByUID(player.uid);
+            socketManager.printState();
+          }
         }, 10000);
-    playerManager.printState();
   });
 
   socket.on('register', function (uid) {
     if(uid) {
-      console.log("REGISTRATION");
-      console.log("USER:",socket.id, "MSG:", uid);
 
-      if (playerManager.findByUID(uid)) {
-        playerManager.updateSocket(uid, socket.id);
+      //CHECK IF THE INCOMING CONNECTION IS FROM A RECONNECT
+      if (socketManager.findByUID(uid)) {
+
+        //IF RECONNECT UPDATE THE SOCKET ID
+        console.log(`-->RECONNECTED: ${uid} - ${socket.id}`);
+        socketManager.updateSocket(uid, socket.id);
+        playerStatus.disconnected = false;
+
       } else {
-        playerManager.addToQueue({
-          socketId: socket.id,
-          uid: uid
-        });
-        playerManager.sendMessage(socket.id, "Added to queue...");
-        playerManager.printState();
-      }
-    }
-    else {
 
+        //REGISTER A NEW USER
+        console.log("-->REGISTRATION:","-USER-",socket.id, "-MSG-", uid);
+
+        let newPlayer = {
+          socketId: socket.id,
+          uid: uid,
+          connected: true
+        };
+
+        socketManager.addToList(newPlayer);
+        queueManager.addToQueue(newPlayer);
+
+        socketManager.sendMessage(uid, "Added to List...");
+        socketManager.printState();
+
+      }
+    } else {
         console.log("Empty registration");
     }
-  }
+
+    if(queueManager.queue.length > 1) {
+
+      //TAKE TWO PLAYERS OUT OF QUEUE AND PASS THEM TO THE GAME MANAGER
+      player1 = queueManager.shiftQueue();
+      player2 = queueManager.shiftQueue();
+      queueManager.printState();
+
+      //CREATING NEW GAME INSTANCE
+      let gameId = gameManager.createGame(player1, player2, "WAR");
+      console.log(`-->NEW GAME -ID-${gameId} -USERS-${player1.uid},${player2.uid} "-GAME- WAR`);
+
+      socketManager.sendMessage(player1.uid,`Joining Game! ID:${gameId}`);
+      socketManager.sendMessage(player2.uid,`Joining Game! ID:${gameId}`);
+    }
+  });
+
+  socket.on('draw', function (data) {
+    gameManager.sendMsg(data.gameID, 'draw', data);
+  });
+
+  socket.on('end-game', function(data) {
+    queueManager.addToQueue(data.player);
+    gameManager.endGame(data.gameId);
+  });
+
+  // socket.on(<Event Name>, function (<data>) {
+  //  <data> contains gameId,uid,game-data
+  //  socketManager uses gameId and uid to properly handle request
+  //  Passes request to game controller
+  //  Game controller uses a gameObject to send new data back
+
+  // });
+
+
+
+  // socket.on('draw-card ', function (from, msg) {
+
+  // });
 
   // socket.on('draw-card', function (from, msg) {
 
   // });
 
-};
-
+});
 
 
 
