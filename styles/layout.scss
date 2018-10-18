@@ -1,7 +1,115 @@
 body {
   background-color: #EEE;
-
-  h1 {
-    color: #244751;
-  }
 }
+
+.wargamecontainer {
+  height: 600px;
+  width:600px;
+  background-color: grey;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.stats {
+  padding-top: 20px;
+  height: 200px;
+  width:100px;
+  background-color: green;
+  margin: auto;
+}
+
+#middlefield{
+  height: 400px;
+}
+#cardcontainer {
+  // margin: auto;
+  // float: top;
+  background-color: rgb(138, 138, 138);
+  height: 200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  padding-bottom:: 20px;
+}
+
+#p1hand, #p2hand {
+  // display: flex;
+  // flex-direction: column;
+
+  width: 75px;
+  height: 115px;
+  margin: auto;
+  
+}
+// #p2card {
+//   width: 75px;
+//   height: auto;
+//   margin: auto;
+// }
+
+
+
+#p1card, #p2card, #p1cardimg, #p1carddrawn, #p2carddrawn {
+  width: 75px;
+  height: auto;
+  margin: auto;
+  padding: 0;
+  border-radius: 0.25em;
+  // position: absolute;
+}
+
+#p1card, #p2card {
+  z-index: 1;
+}
+
+#p1carddrawn, #p2carddrawn {
+  position: absolute;
+  z-index: 3;
+}
+
+
+button > img {
+  pointer-events: none;
+}
+
+// #p1card:hover {
+//   border: white 1px solid;
+// }
+// #nav-bar {
+//   height: 80px;
+//   position: fixed;
+//   top: 0;
+//   width: 100%;
+//   background-color: #00a087;
+//   color: #e8fdff;
+//   padding-left: 2em;
+// }
+
+// #nav-bar h1 {
+//   color: #244751;
+//   padding-left: 10px;
+//   float: left;
+//   font-size: 2em;
+//   line-height: 80px
+// }
+
+
+//card movement
+.object {
+  position: absolute;
+// make the object move smoothly and animated
+  -webkit-transition: all 2s ease-in;
+  -moz-transition: all 2s ease-in;
+  -o-transition: all 2s ease-in;
+}
+
+#axis:hover .move-ne{
+    transform: translate(350px,-350px);
+    -webkit-transform: translate(350px,-350px);
+    -o-transform: translate(350px,-350px); 
+    -moz-transform: translate(350px,-350px);
+    
+};
