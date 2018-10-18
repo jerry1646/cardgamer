@@ -7,8 +7,13 @@
     <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
 
+      <!-- SOCKET SCRIPTS -->
+      <script src="/socket.io/socket.io.js"></script>
+
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
+
+
   </head>
 
   <body>
@@ -33,11 +38,11 @@
       </section>
     
       <h2>event buttons for testing</h2>
-      <button class="p2connect">
+      <!-- <button class="p2connect">
           <span>
             p2 connected
           </span>
-        </button>
+        </button> -->
         <button class="p2disconnect">
             <span>
               p2 disconnected
@@ -48,16 +53,16 @@
             p1 DRAW
           </span>
         </button>
-        <button class="p2draw">
+        <!-- <button class="p2draw">
             <span>
               p2 DRAW
             </span>
-          </button>
-          <button class="p1p2draw">
+          </button> -->
+          <!-- <button class="p1p2draw">
             <span>
               p1p2 DRAW
             </span>
-          </button>
+          </button> -->
           <button class="bothdrawn">
             <span>
               BOTH DRAW
@@ -65,4 +70,6 @@
           </button>  
       
   </body>
+  <!-- SOCKET SCRIPTS -->
+  <script src="/socket.io/socket.io.js"></script>
 </html>

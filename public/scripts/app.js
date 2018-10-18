@@ -1,13 +1,53 @@
-// $(() => {
-//   $.ajax({
-//     method: "GET",
-//     url: "/api/users"
-//   }).done((users) => {
-//     for(user of users) {
-//       $("<div>").text(user.name).appendTo($("body"));
-//     }
-//   });;
-// });
+//CREATE RANDOM USER ID ONCE PER SESSION (REGENERATED ON REFRESH BUT NOT ON SOCKET DROP/RECONNECT)
+var randomlyGeneratedUID = Math.random().toString(36).substring(3,16) + +new Date;
+var gameId = ""
+
+// const message = {
+// // turn: 1,
+// // cards: { id1: 15 },
+// // roundWinner: '',
+// // gameWinner: '',
+// // players:
+// // { id1: { score: 1, playable: false },
+// //   id2: { score: 0, playable: true } }
+// };
+
+//INITIATE SOCKET CONNECTION
+var socket = io.connect('http://localhost:8080');
+
+//LISTENER FOR SOCKET
+
+//CONNECT SOCKET TO SERVER
+socket.on('connect', () => {
+  console.log('Successfully connected!');
+
+});
+
+//message both peopel connected and server ready for game
+socket.on('ready', (message) => {
+  gameId = message
+  console.log(gameId, "this is gameid")
+  gameconnect()
+  console.log('p2 connected and game loaded');
+
+});
+
+socket.on('update', (message) => {
+  
+  console.log(message);
+
+});
+
+//end of game
+socket.on('end-game', () => {
+  data = {
+    // gameId:
+    uid: randomlyGeneratedUID
+  }
+  socket.emit('end-game', data)
+  console.log('game ended MISSING gameId');
+
+});
 
 // FUNCTIONS -------------------------------------------------------------------------
 //initial game load and waiting for other player
@@ -111,6 +151,15 @@ $(document).ready(function() {
 //send player ready and load gamebox
 $(".newwargame").on("click", function(event) {
   gameload();
+  //"JOIN GAME ACTION"
+  //Provide server with userId upon "JOIN GAME ACTION"
+  //ASSIGN GAMETYPE FROM DROP DOWN LIST OF GAMES
+  var registration = {
+    uid: randomlyGeneratedUID,
+    gameType: "war"
+  };
+  socket.emit('register', registration);
+  console.log(randomlyGeneratedUID);
   console.log("newwargame started game init");
   })
 
@@ -136,7 +185,13 @@ $("#wargamecontainer #p1hand #p1card").on("click", function(event) {
 
 //when player 1 plays card
 $(".p1draw").on("click", function(event) {
+  var data = {
+    gameId: gameId,
+    uid: randomlyGeneratedUID
+  }
+  console.log("missing gameid")
   p1draw();
+  socket.emit('draw', data);
   console.log("p1 draw card");
 });
 
