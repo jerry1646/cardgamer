@@ -69,14 +69,16 @@ io.on('connection', function(socket) {
   let playerStatus = {/* CONNECTION DROP HANDLER */};
   console.log(`Socket: ${socket.id} connected...`);
 
+  //SOCKET DISCONNECT HANDLING
   socket.on('disconnect', function() {
     playerStatus.disconnected = true;
 
     setTimeout(function () {
           if (playerStatus.disconnected) {
-            console.log(`-->DISCONNECTED: ${player.uid} - ${socket.id}`);
             //SET PLAYER TO DISCONNECTED FOR ALL OTHER OBJECTS IN CODE
-            socketManager.findBySID(socket.id).connected = false;
+            let player = socketManager.findBySID(socket.id);
+            player.connected = false;
+            console.log(`-->DISCONNECTED: ${player.uid} - ${socket.id}`);
             //REMOVE PLAYER REFERENCE FROM SOCKET MANAGER
             socketManager.deleteByUID(player.uid);
             socketManager.printState();
@@ -125,7 +127,7 @@ io.on('connection', function(socket) {
       queueManager.printState();
 
       //CREATING NEW GAME INSTANCE
-      let gameId = gameManager.createGame(player1, player2, "WAR");
+      let gameId = gameManager.createGame([player1, player2], "WAR");
       console.log(`-->NEW GAME -ID-${gameId} -USERS-${player1.uid},${player2.uid} "-GAME- WAR`);
 
       socketManager.sendMessage(player1.uid,`Joining Game! ID:${gameId}`);
@@ -134,11 +136,17 @@ io.on('connection', function(socket) {
   });
 
   socket.on('draw', function (data) {
-    gameManager.sendMsg(data.gameID, 'draw', data);
+    console.log(data);
+    gameManager.sendMsg('draw', data);
   });
 
   socket.on('end-game', function(data) {
-    queueManager.addToQueue(data.player);
+    player = {
+      uid: data.uid,
+      socketId: socket.id,
+      connected: true
+    };
+    queueManager.addToQueue(player);
     gameManager.endGame(data.gameId);
   });
 
