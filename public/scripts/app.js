@@ -1,6 +1,7 @@
 //CREATE RANDOM USER ID ONCE PER SESSION (REGENERATED ON REFRESH BUT NOT ON SOCKET DROP/RECONNECT)
 var randomlyGeneratedUID = Math.random().toString(36).substring(3,16) + +new Date;
 var gameId = ""
+const cards = require('./cardReference.js');
 
 // const message = {
 // // turn: 1,
