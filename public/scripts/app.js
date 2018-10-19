@@ -1,7 +1,7 @@
 //CREATE RANDOM USER ID ONCE PER SESSION (REGENERATED ON REFRESH BUT NOT ON SOCKET DROP/RECONNECT)
 var randomlyGeneratedUID = Math.random().toString(36).substring(3,16) + +new Date;
 var gameId = ""
-const cards = require('./cardReference.js');
+// const cards = require('./cardReference.js');
 
 // const message = {
 // // turn: 1,
@@ -34,7 +34,7 @@ socket.on('ready', (message) => {
 });
 
 socket.on('update', (message) => {
-  
+
   console.log(message);
 
 });
@@ -63,10 +63,10 @@ function gameload(){
   let $gametitle = $("<h2>").addClass('title').text("Game of War");
   $('.wargamecontainer').append($waitingmessage);
   $('.gametitlesection').prepend($gametitle)
-  
+
 }
 
-//player 2 disconnected 
+//player 2 disconnected
 function gamedisconnect(){
     $('.wargamecontainer').empty();
 
@@ -116,7 +116,7 @@ function p2draw(){
   let $p2card = $("<img>").attr('src', p2drawnCard).attr('id', 'p2carddrawn');
   // $('#p2hand').empty();
   $("#p2carddrawnbox").append($p2card)
-  
+
 }
 
 //card movement
@@ -131,7 +131,7 @@ function cardmove() {
 
 //game end actions
 function gameend(){
-  if ($('.wargamecontainer').is(":visible")) { 
+  if ($('.wargamecontainer').is(":visible")) {
     $('.wargamecontainer').empty();
     $('.gametitlesection').empty();
     $('.wargamecontainer').slideToggle();
@@ -179,7 +179,7 @@ $(".p2disconnect").on("click", function(event) {
 
 //  current client drawing card
 $("#wargamecontainer #p1hand #p1card").on("click", function(event) {
-  event.preventDefault(); 
+  event.preventDefault();
   console.log("p1 draw card");
   gameend()
 });
@@ -221,7 +221,7 @@ console.log("both hands drawn card should move");
 }, 3000);
 });
 
-//disconnect and clear game 
+//disconnect and clear game
 $(".endwargame").on("click", function(event) {
   gameend();
   console.log("newwargame ended");
