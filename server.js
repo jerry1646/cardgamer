@@ -99,8 +99,8 @@ app.use("/api/users", usersRoutes(db));
 
 // Home page
 app.get("/", (req, res) => {
-  // res.render("index");
-  res.redirect("/welcome");
+  res.render("index");
+  // res.redirect("/welcome");
 });
 
 //REAL HOME PAGE
