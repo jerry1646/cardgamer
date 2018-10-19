@@ -18,7 +18,18 @@
     </header>
     <main>
       <div class="jumbotron">
-        <h1>Welcome <%= user.username %></h1>
+        <h1>Register</h1>
+        <form action="/register" method="POST">
+          <label for="username">Username:</label>
+          <input type="text" name="username"/>
+          <label for="email">Email:</label>
+          <input type="email" name="email"/>
+          <label for="password">Password:</label>
+          <input type="password" name="password"/>
+          <label for="password_confirm">Confirm Password:</label>
+          <input type="password" name="password_confirm"/>
+          <input type="submit" name="submit"/>
+        </form>
       </div>
     </main>
   </body>

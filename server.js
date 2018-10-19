@@ -2,24 +2,31 @@
 /* jshint esversion : 6 */
 require('dotenv').config();
 
-const PORT        = process.env.PORT || 8080;
-const ENV         = process.env.ENV || "development";
-const express     = require("express");
-const bodyParser  = require("body-parser");
-const sass        = require("node-sass-middleware");
-const app         = express();
+const PORT          = process.env.PORT || 8080;
+const ENV           = process.env.ENV || "development";
+const express       = require("express");
+const bodyParser    = require("body-parser");
+const sass          = require("node-sass-middleware");
+const app           = express();
 
-//Add socket overhead
-const http        = require('http').Server(app);
 
-const knexConfig  = require("./knexfile");
-const knex        = require("knex")(knexConfig[ENV]);
-const morgan      = require('morgan');
-const knexLogger  = require('knex-logger');
+const cookieSession = require('cookie-session');
+const bcrypt        = require('bcrypt');
+
+//ADD SOCKET OVERHEAD
+const http          = require('http').Server(app);
+
+//DATABASE CONFIGURATION
+const knexConfig    = require("./knexfile");
+const db            = require("knex")(knexConfig[ENV]);
+
+//LOGGING SOFTWARE
+const morgan        = require('morgan');
+const knexLogger    = require('knex-logger');
 
 // Seperated Routes for each Resource
-const usersRoutes = require("./routes/users");
-const socketRoutes = require("./routes/sockets");
+const usersRoutes   = require("./routes/users");
+const socketRoutes  = require("./routes/sockets");
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -28,7 +35,7 @@ const socketRoutes = require("./routes/sockets");
 app.use(morgan('dev'));
 
 // // Log knex SQL queries to STDOUT as well
-app.use(knexLogger(knex));
+app.use(knexLogger(db));
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -42,8 +49,53 @@ app.use("/styles", sass({
 
 app.use(express.static("public"));
 
+app.use(cookieSession({
+  name: 'session',
+  keys: ["jbkbjkk"],
+
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
+
+
+//USER AUTHENTICATION MIDDLEWARE
+app.use((req, res, next) => {
+  const username = req.session.username;
+  const anonUser = {
+    id: -1,
+    username: '',
+    email: 'anon@anon.com',
+    password: 'anonpassword'
+  };
+
+  if(username) {
+
+    return db('users')
+    .where('username', username)
+    .select('id', 'username')
+    .then( (rows) => {
+      let user = rows[0];
+      if(user) {
+        req.currentUser = user;
+      } else {
+        req.currentUser = anonUser;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      req.currentUser = anonUser;
+    })
+    .then(() => {
+      return next();
+    });
+  } else {
+    req.currentUser = anonUser;
+    next();
+  }
+});
+
 // Mount all resource routes
-app.use("/api/users", usersRoutes(knex));
+app.use("/api/users", usersRoutes(db));
 
 // Home page
 app.get("/", (req, res) => {
@@ -53,9 +105,73 @@ app.get("/", (req, res) => {
 
 //REAL HOME PAGE
 app.get("/welcome", (req, res) => {
-  res.render("index");
+  res.render("welcome", {user: req.currentUser});
 });
 
+app.get("/login", (req, res) => {
+  res.render("login", {user: req.currentUser});
+});
+
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if(username && password) {
+    db('users')
+    .where('username', username)
+    .select('*').limit(1)
+    .catch( (err) => {
+      console.log("User does not exist");
+      res.redirect("/login");
+    })
+    .then( ([user]) => {
+      bcrypt.compare(password, user.password).then(function(match) {
+        if(match === true) {
+          req.session.username = username;
+          res.redirect("/welcome");
+        } else if (match === false) {
+          console.error("Failed login");
+          res.redirect('/login');
+        }
+      });
+    });
+  } else {
+    console.log("Empty username and password");
+  }
+
+});
+
+app.get("/register", (req, res) => {
+  res.render("register", {user: req.currentUser});
+});
+
+app.post("/register", (req, res) => {
+
+  const { username, email, password, password_confirm } = req.body;
+
+  if(username && email && password) {
+    bcrypt.hash(password, 10).then(function(password) {
+      // Store hash in your password DB.
+      db("users")
+      .insert({username, email, password})
+      .catch( (err) => {
+        console.log("Username or Email already taken!", err);
+        res.redirect("/register");
+      })
+      .then( () => {
+        req.session.username = username;
+        res.redirect("/welcome");
+      });
+    });
+  } else {
+    console.log("Empty Fields!");
+    res.redirect("/register");
+  }
+});
+
+app.get("/logout", (req, res) => {
+  req.session = null;
+  res.redirect('/welcome');
+});
 const server = app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
 });
@@ -100,11 +216,11 @@ io.on('connection', function(socket) {
 
       //CHECK IF THE INCOMING CONNECTION IS FROM A RECONNECT
       if (socketManager.findByUID(uid)) {
+        playerStatus.disconnected = false;
 
         //IF RECONNECT UPDATE THE SOCKET ID
         console.log(`-->RECONNECTED: ${uid} - ${socket.id}`);
         socketManager.updateSocket(uid, socket.id);
-        playerStatus.disconnected = false;
 
       } else {
 
