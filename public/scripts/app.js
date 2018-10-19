@@ -1,6 +1,6 @@
 //CREATE RANDOM USER ID ONCE PER SESSION (REGENERATED ON REFRESH BUT NOT ON SOCKET DROP/RECONNECT)
 var randomlyGeneratedUID = Math.random().toString(36).substring(3,16) + +new Date;
-var gameId = ""
+var gameId, players, opponentUID;
 const cardRef = {
   1:'01H',
   2:'02H',
@@ -82,7 +82,10 @@ socket.on('connect', () => {
 
 //message both peopel connected and server ready for game
 socket.on('ready', (message) => {
-  gameId = message
+  gameId = message.gameId;
+  players = message.players;
+  opponentUID = (players.indexOf(randomlyGeneratedUID) == 1)? players[0]: players[1];
+  console.log('My opponent is: ',opponentUID);
   console.log(gameId, "this is gameid")
   gameconnect()
   console.log('p2 connected and game loaded');
@@ -91,9 +94,12 @@ socket.on('ready', (message) => {
 
 socket.on('update', (message) => {
   let mycard = cardRef[message.cards[randomlyGeneratedUID]];
+  let opponentcard = cardRef[message.cards[opponentUID]];
   p1draw(mycard);
+  p2draw(opponentcard);
   console.log(message.players[randomlyGeneratedUID].score);
   $('#my-score').text(message.players[randomlyGeneratedUID].score);
+  $('#op-score').text(message.players[opponentUID].score);
 });
 
 //end of game
@@ -172,12 +178,19 @@ function p1draw(param){
 }
 
 //p2draw
-function p2draw(){
-  p2drawnCard = "/images/cards/2H.png";
-  let $p2card = $("<img>").attr('src', p2drawnCard).attr('id', 'p2carddrawn');
-  // $('#p2hand').empty();
-  $("#p2carddrawnbox").append($p2card)
-
+function p2draw(param){
+  if (param){
+    // p2drawnCard = "/images/cards/AH.png";
+    // let $p2card = $("<img>").attr('src', p2drawnCard).attr('id', 'p2carddrawn');;
+    // // $('#p2hand').empty();
+    // $('#p2hand').append($p2card);
+    p2drawnCard = `/images/cards/${param}.png`;
+    // let $p2card = $("<img>").attr('src', p2drawnCard).attr('id', 'p2carddrawn');;
+    // // $('#p2hand').empty();
+    // $('#p2carddrawnbox').append($p2card)
+    $('#p2carddrawnbox').append(
+      `<img src = '${p2drawnCard}' id = 'p2carddrawn'>`);
+  }
 }
 
 //card movement
