@@ -1,7 +1,62 @@
 //CREATE RANDOM USER ID ONCE PER SESSION (REGENERATED ON REFRESH BUT NOT ON SOCKET DROP/RECONNECT)
 var randomlyGeneratedUID = Math.random().toString(36).substring(3,16) + +new Date;
 var gameId = ""
-// const cards = require('./cardReference.js');
+const cardRef = {
+  1:'01H',
+  2:'02H',
+  3:'03H',
+  4:'04H',
+  5:'05H',
+  6:'06H',
+  7:'07H',
+  8:'08H',
+  9:'09H',
+  10:'10H',
+  11:'11H',
+  12:'12H',
+  13:'13H',
+  14:'01S',
+  15:'02S',
+  16:'03S',
+  17:'04S',
+  18:'05S',
+  19:'06S',
+  20:'07S',
+  21:'08S',
+  22:'09S',
+  23:'10S',
+  24:'11S',
+  25:'12S',
+  26:'13S',
+  27:'01C',
+  28:'02C',
+  29:'03C',
+  30:'04C',
+  31:'05C',
+  32:'06C',
+  33:'07C',
+  34:'08C',
+  35:'09C',
+  36:'10C',
+  37:'11C',
+  38:'12C',
+  39:'13C',
+  40:'01D',
+  41:'02D',
+  42:'03D',
+  43:'04D',
+  44:'05D',
+  45:'06D',
+  46:'07D',
+  47:'08D',
+  48:'09D',
+  49:'10D',
+  50:'11D',
+  51:'12D',
+  52:'13D',
+  53:'j01',
+  54:'j02',
+};
 
 // const message = {
 // // turn: 1,
@@ -15,6 +70,7 @@ var gameId = ""
 
 //INITIATE SOCKET CONNECTION
 var socket = io.connect('http://localhost:8080');
+
 
 //LISTENER FOR SOCKET
 
@@ -34,9 +90,10 @@ socket.on('ready', (message) => {
 });
 
 socket.on('update', (message) => {
-
-  console.log(message);
-
+  let mycard = cardRef[message.cards[randomlyGeneratedUID]];
+  p1draw(mycard);
+  console.log(message.players[randomlyGeneratedUID].score);
+  $('#my-score').text(message.players[randomlyGeneratedUID].score);
 });
 
 //end of game
@@ -99,15 +156,19 @@ function gameconnect(){
 }
 
 //p1draw
-function p1draw(){
-  // p1drawnCard = "/images/cards/AH.png";
-  // let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
-  // // $('#p1hand').empty();
-  // $('#p1hand').append($p1card);
-  p1drawnCard = "/images/cards/AH.png";
-  let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
-  // $('#p2hand').empty();
-  $('#p1carddrawnbox').append($p1card)
+function p1draw(param){
+  if (param){
+    // p1drawnCard = "/images/cards/AH.png";
+    // let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
+    // // $('#p1hand').empty();
+    // $('#p1hand').append($p1card);
+    p1drawnCard = `/images/cards/${param}.png`;
+    // let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
+    // // $('#p2hand').empty();
+    // $('#p1carddrawnbox').append($p1card)
+    $('#p1carddrawnbox').append(
+      `<img src = '${p1drawnCard}' id = 'p1carddrawn'>`)
+  }
 }
 
 //p2draw
@@ -192,9 +253,9 @@ $(".p1draw").on("click", function(event) {
   }
   console.log("uid", data.uid)
   console.log("gameid", data.gameid)
-  p1draw();
+
   socket.emit('draw', data);
-  console.log("p1 draw card");
+
 });
 
 //when player 2 plays card

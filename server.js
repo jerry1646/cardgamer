@@ -192,19 +192,20 @@ io.on('connection', function(socket) {
 
   //SOCKET DISCONNECT HANDLING
   socket.on('disconnect', function() {
-    playerStatus.disconnected = true;
+    console.log("PLAYER DISCONNECTED ---- SOCKET ID: ", socket.id);
+    // playerStatus.disconnected = true;
 
-    setTimeout(function () {
-          if (playerStatus.disconnected) {
-            //SET PLAYER TO DISCONNECTED FOR ALL OTHER OBJECTS IN CODE
-            let player = socketManager.findBySID(socket.id);
-            player.connected = false;
-            console.log(`-->DISCONNECTED: ${player.uid} - ${socket.id}`);
-            //REMOVE PLAYER REFERENCE FROM SOCKET MANAGER
-            socketManager.deleteByUID(player.uid);
-            socketManager.printState();
-          }
-        }, 10000);
+    // setTimeout(function () {
+    //       if (playerStatus.disconnected) {
+    //         //SET PLAYER TO DISCONNECTED FOR ALL OTHER OBJECTS IN CODE
+    //         let player = socketManager.findBySID(socket.id);
+    //         console.log(`-->DISCONNECTED: ${player.uid} - ${socket.id}`);
+    //         player.connected = false;
+    //         //REMOVE PLAYER REFERENCE FROM SOCKET MANAGER
+    //         socketManager.deleteByUID(player.uid);
+    //         socketManager.printState();
+    //       }
+    //     }, 10000);
   });
 
   socket.on('register', function (data) {
