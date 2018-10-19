@@ -44,10 +44,15 @@ app.use(express.static("public"));
 
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
-app.use("/socket", socketRoutes(knex));
 
 // Home page
 app.get("/", (req, res) => {
+  // res.render("index");
+  res.redirect("/welcome");
+});
+
+//REAL HOME PAGE
+app.get("/welcome", (req, res) => {
   res.render("index");
 });
 
