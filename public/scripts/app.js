@@ -189,7 +189,8 @@ $(".p1draw").on("click", function(event) {
     gameId: gameId,
     uid: randomlyGeneratedUID
   }
-  console.log("missing gameid")
+  console.log("uid", data.uid)
+  console.log("gameid", data.gameid)
   p1draw();
   socket.emit('draw', data);
   console.log("p1 draw card");

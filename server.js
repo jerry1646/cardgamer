@@ -86,8 +86,12 @@ io.on('connection', function(socket) {
         }, 10000);
   });
 
-  socket.on('register', function (uid) {
-    if(uid) {
+  socket.on('register', function (data) {
+    if(data) {
+
+      let uid = data.uid;
+      let gameType = data.gameType;
+      //REMEMBER TO ADD THIS TO DIFFERENT QUEUES AND PROCESS GAMETYPE INFORMATION EFFECTIVELY YOU BITCH ASS MUTHAFUCKA
 
       //CHECK IF THE INCOMING CONNECTION IS FROM A RECONNECT
       if (socketManager.findByUID(uid)) {
