@@ -169,6 +169,9 @@ function p1draw(param){
     $('#p1carddrawnbox').empty();
     $('#p1carddrawnbox').append($p1card)
     // $('#p1carddrawnbox').append(`<img src = '${p1drawnCard}' id = 'p1carddrawn'>`)
+    setTimeout(function () {
+      $("#p1carddrawn").animate({left: '+=75px'});
+    }, 500);
   }
 }
 
@@ -180,6 +183,9 @@ function p2draw(param){
     $('#p2carddrawnbox').empty();
     $('#p2carddrawnbox').append($p2card)
     // $('#p2carddrawnbox').append(`<img src = '${p2drawnCard}' id = 'p2carddrawn'>`);
+    setTimeout(function () {
+      $("#p2carddrawn").animate({right: '+=75px'});
+    }, 500);
   }
 }
 
