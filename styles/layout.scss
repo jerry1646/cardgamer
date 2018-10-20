@@ -71,9 +71,6 @@ body {
 }
 
 
-button > img {
-  pointer-events: none;
-}
 
 // #p1card:hover {
 //   border: white 1px solid;
@@ -96,20 +93,3 @@ button > img {
 //   line-height: 80px
 // }
 
-
-//card movement
-.object {
-  position: absolute;
-// make the object move smoothly and animated
-  -webkit-transition: all 2s ease-in;
-  -moz-transition: all 2s ease-in;
-  -o-transition: all 2s ease-in;
-}
-
-#axis:hover .move-ne{
-    transform: translate(350px,-350px);
-    -webkit-transform: translate(350px,-350px);
-    -o-transform: translate(350px,-350px); 
-    -moz-transform: translate(350px,-350px);
-    
-};

@@ -97,9 +97,10 @@ socket.on('update', (message) => {
   let opponentcard = cardRef[message.cards[opponentUID]];
   p1draw(mycard);
   p2draw(opponentcard);
-  console.log(message.players[randomlyGeneratedUID].score);
-  $('#my-score').text(message.players[randomlyGeneratedUID].score);
-  $('#op-score').text(message.players[opponentUID].score);
+  setScore(message);
+  cardmove(message);
+  gameEndCheck(message);
+  console.log(message);
 });
 
 //end of game
@@ -119,7 +120,6 @@ function gameload(){
     //show game container and end button
     if ($('.wargamecontainer').is(":hidden")) {
       $('.wargamecontainer').slideToggle();}
-      $('.newwargame').hide();
       $('.endwargame').show();
 
   let $waitingmessage = $("<h2>").text("WAITING FOR A FRIEND");
@@ -164,55 +164,69 @@ function gameconnect(){
 //p1draw
 function p1draw(param){
   if (param){
-    // p1drawnCard = "/images/cards/AH.png";
-    // let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
-    // // $('#p1hand').empty();
-    // $('#p1hand').append($p1card);
     p1drawnCard = `/images/cards/${param}.png`;
-    // let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
-    // // $('#p2hand').empty();
-    // $('#p1carddrawnbox').append($p1card)
-    $('#p1carddrawnbox').append(
-      `<img src = '${p1drawnCard}' id = 'p1carddrawn'>`)
+    let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
+    $('#p1carddrawnbox').empty();
+    $('#p1carddrawnbox').append($p1card)
+    // $('#p1carddrawnbox').append(`<img src = '${p1drawnCard}' id = 'p1carddrawn'>`)
   }
 }
 
 //p2draw
 function p2draw(param){
   if (param){
-    // p2drawnCard = "/images/cards/AH.png";
-    // let $p2card = $("<img>").attr('src', p2drawnCard).attr('id', 'p2carddrawn');;
-    // // $('#p2hand').empty();
-    // $('#p2hand').append($p2card);
     p2drawnCard = `/images/cards/${param}.png`;
-    // let $p2card = $("<img>").attr('src', p2drawnCard).attr('id', 'p2carddrawn');;
-    // // $('#p2hand').empty();
-    // $('#p2carddrawnbox').append($p2card)
-    $('#p2carddrawnbox').append(
-      `<img src = '${p2drawnCard}' id = 'p2carddrawn'>`);
+    let $p2card = $("<img>").attr('src', p2drawnCard).attr('id', 'p2carddrawn');;
+    $('#p2carddrawnbox').empty();
+    $('#p2carddrawnbox').append($p2card)
+    // $('#p2carddrawnbox').append(`<img src = '${p2drawnCard}' id = 'p2carddrawn'>`);
   }
 }
 
 //card movement
-function cardmove() {
-  $("#p2carddrawn").animate({left: '400px', bottom: '575px'});
-  $("#p1carddrawn").animate({right: '400px', top: '385px'});
-  console.log("cards moving")
+function cardmove(param) {
+  if (param.roundWinner) {
+    $("#p2carddrawn").animate({left: '400px', bottom: '575px'});
+    $("#p1carddrawn").animate({right: '400px', top: '385px'});
+    setTimeout(function () {
+        $('#p1carddrawnbox').empty();
+        $('#p2carddrawnbox').empty();
+        console.log("cards cleared")
+      }, 500);
+  }
 }
 
-//display winner message
+//display player scores
+function setScore(param) {
+  $('#my-score').text(param.players[randomlyGeneratedUID].score);
+  $('#op-score').text(param.players[opponentUID].score);
+  $('#turn').text(param.turn);
+}
 
+// display winner message
+function displaygameWinner(param) {
+  if (param.gameWinner == randomlyGeneratedUID){
+    alert("YOU WIN!!")
+  } else {
+    alert("YOU'RE A LOSER ;)")
+  }
+}
 
-//game end actions
-function gameend(){
-  if ($('.wargamecontainer').is(":visible")) {
-    $('.wargamecontainer').empty();
-    $('.gametitlesection').empty();
-    $('.wargamecontainer').slideToggle();
-    $('.newwargame').show();
-    $('.endwargame').hide();
-    console.log("send end game")
-}}
+//game end check and actions
+function gameEndCheck(param){
+  if (param.gameWinner) {
+    if ($('.wargamecontainer').is(":visible")) {
+      $('.wargamecontainer').empty();
+      $('.gametitlesection').empty();
+      $('.wargamecontainer').slideToggle();
+      $('.newwargame').show();
+      $('.endwargame').hide();
+      displaygameWinner(param);
+      console.log("send end game")
+}
+}
+}
+
 
 // EVENTS-------------------------------------------------------------------------
 
@@ -225,6 +239,7 @@ $(document).ready(function() {
 
 //send player ready and load gamebox
 $(".newwargame").on("click", function(event) {
+  $('.newwargame').hide();
   gameload();
   //"JOIN GAME ACTION"
   //Provide server with userId upon "JOIN GAME ACTION"
@@ -238,12 +253,6 @@ $(".newwargame").on("click", function(event) {
   console.log("newwargame started game init");
   })
 
-//2nd player connect
-$(".p2connect").on("click", function(event) {
-  gameconnect();
-  console.log("pconnected");
-});
-
 //2nd player disconnect
 $(".p2disconnect").on("click", function(event) {
   gamedisconnect();
@@ -252,10 +261,10 @@ $(".p2disconnect").on("click", function(event) {
 
 
 //  current client drawing card
-$("#wargamecontainer #p1hand #p1card").on("click", function(event) {
+$("#p1card").on("click", function(event) {
   event.preventDefault();
   console.log("p1 draw card");
-  gameend()
+  p1draw();
 });
 
 //when player 1 plays card
@@ -264,36 +273,9 @@ $(".p1draw").on("click", function(event) {
     gameId: gameId,
     uid: randomlyGeneratedUID
   }
-  console.log("uid", data.uid)
-  console.log("gameid", data.gameid)
-
   socket.emit('draw', data);
-
 });
 
-//when player 2 plays card
-$(".p2draw").on("click", function(event) {
-  console.log("p2 draw card");
-  p2draw();
-});
-
-//REMOVE shortcut to make testing faster
-$(".p1p2draw").on("click", function(event) {
-  console.log("both draw card shortcut");
-  p2draw();
-  p1draw();
-});
-
-//when both cards are played.
-$(".bothdrawn").on("click", function(event) {
-console.log("both hands drawn card should move");
-  cardmove();
-  setTimeout(function () {
-    $('#p1carddrawnbox').empty();
-    $('#p2carddrawnbox').empty();
-    console.log("cards cleared")
-}, 3000);
-});
 
 //disconnect and clear game
 $(".endwargame").on("click", function(event) {
