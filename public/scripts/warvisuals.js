@@ -163,37 +163,45 @@ function gameconnect(){
 
 //p1draw
 function p1draw(param){
-  if (param){
+  if (param && !document.getElementById("#p1carddrawn")){
     p1drawnCard = `/images/cards/${param}.png`;
     let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
     $('#p1carddrawnbox').empty();
     $('#p1carddrawnbox').append($p1card)
     // $('#p1carddrawnbox').append(`<img src = '${p1drawnCard}' id = 'p1carddrawn'>`)
+    setTimeout(function () {
+      // $("#p1carddrawn").animate({left: '+=75px'});
+    }, 500);
   }
 }
 
 //p2draw
 function p2draw(param){
-  if (param){
+  if (param && !document.getElementById("#p2carddrawn")){
     p2drawnCard = `/images/cards/${param}.png`;
     let $p2card = $("<img>").attr('src', p2drawnCard).attr('id', 'p2carddrawn');;
     $('#p2carddrawnbox').empty();
     $('#p2carddrawnbox').append($p2card)
     // $('#p2carddrawnbox').append(`<img src = '${p2drawnCard}' id = 'p2carddrawn'>`);
+    setTimeout(function () {
+      // $("#p2carddrawn").animate({right: '+=75px'});
+    }, 500);
   }
 }
 
 //card movement
 function cardmove(param) {
-  if (param.roundWinner) {
-    $("#p2carddrawn").animate({left: '400px', bottom: '575px'});
-    $("#p1carddrawn").animate({right: '400px', top: '385px'});
-    setTimeout(function () {
-        $('#p1carddrawnbox').empty();
-        $('#p2carddrawnbox').empty();
-        console.log("cards cleared")
-      }, 500);
-  }
+  setTimeout(function () {
+    if (param.roundWinner) {
+      $("#p2carddrawn").animate({right: '+=70px', top: '+=220px'});
+      $("#p1carddrawn").animate({left: '+=70px', bottom: '+=220px'});
+      setTimeout(function () {
+          $('#p1carddrawnbox').empty();
+          $('#p2carddrawnbox').empty();
+          console.log("cards cleared")
+        }, 3000);
+    }
+  }, 500);
 }
 
 //display player scores
