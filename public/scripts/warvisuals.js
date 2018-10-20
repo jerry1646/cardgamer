@@ -185,15 +185,17 @@ function p2draw(param){
 
 //card movement
 function cardmove(param) {
-  if (param.roundWinner) {
-    $("#p2carddrawn").animate({left: '400px', bottom: '575px'});
-    $("#p1carddrawn").animate({right: '400px', top: '385px'});
-    setTimeout(function () {
-        $('#p1carddrawnbox').empty();
-        $('#p2carddrawnbox').empty();
-        console.log("cards cleared")
-      }, 500);
-  }
+  setTimeout(function () {
+    if (param.roundWinner) {
+      $("#p2carddrawn").animate({right: '+=70px', top: '+=220px'});
+      $("#p1carddrawn").animate({left: '+=70px', bottom: '+=220px'});
+      setTimeout(function () {
+          $('#p1carddrawnbox').empty();
+          $('#p2carddrawnbox').empty();
+          console.log("cards cleared")
+        }, 3000);
+    }
+  }, 500);
 }
 
 //display player scores
