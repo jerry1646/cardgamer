@@ -99,7 +99,7 @@ app.use("/api/users", usersRoutes(db));
 
 // Home page
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("welcome", {user: req.currentUser});
   // res.redirect("/welcome");
 });
 
@@ -110,6 +110,11 @@ app.get("/welcome", (req, res) => {
 
 app.get("/login", (req, res) => {
   res.render("login", {user: req.currentUser});
+});
+
+//War game page
+app.get("/wargame", (req, res) => {
+  res.render("wargame", {user: req.currentUser});
 });
 
 app.post("/login", (req, res) => {
