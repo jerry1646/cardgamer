@@ -8,7 +8,8 @@ const express       = require("express");
 const bodyParser    = require("body-parser");
 const sass          = require("node-sass-middleware");
 const app           = express();
-
+const flash         = require('connect-flash');
+const cookieParser  = require('cookie-parser')
 
 const cookieSession = require('cookie-session');
 const bcrypt        = require('bcrypt');
@@ -58,6 +59,8 @@ app.use(cookieSession({
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
+//CONNECT-FLASH MIDDLEWARE FOR NOTIFICATIONS
+  app.use(flash())
 
 //USER AUTHENTICATION MIDDLEWARE
 app.use((req, res, next) => {
@@ -86,13 +89,19 @@ app.use((req, res, next) => {
   next();
 });
 
+//CONNECT-FLASH TEST
+app.get('/flash', function(req, res){
+  // Set a flash message by passing the key, followed by the value, to req.flash().
+  req.flash('info', 'Flash is back!')
+  res.redirect('/');
+});
 
 // Mount all resource routes
 app.use("/api/users", usersRoutes(db));
 
 // Home page
 app.get("/", (req, res) => {
-  res.render("welcome", {user: req.currentUser});
+  res.render("welcome", {user: req.currentUser, info: req.flash('info') });
   // res.render("index");
 });
 
@@ -113,6 +122,7 @@ app.post("/login", (req, res) => {
     .login(username, password)
     .then(user => {
       req.session.username = username;
+      req.flash('info', 'Flash is back!')
       res.redirect("/");
     })
     .catch(e => {
