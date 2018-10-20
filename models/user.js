@@ -3,36 +3,37 @@
 const {hash, verify} = require("../util/pw_encryption.js");
 
 module.exports = (knex) => {
+
+
   const registerUser = (username, email, password) => {
-   hash(password)
+   return hash(password)
     .then(function(hashed_password) {
       // Store hash in your password DB.
       console.log("writing user info to db");
       console.log(username, hashed_password);
       knex("users")
-      .insert({username, email, hashed_password})
-      // .returning("*");
-
-      return knex("users").select("*");
+      .insert({username, email, password:hashed_password})
+      .returning('*')
+      .then((result) => {console.log('insert completed');})
     });
   };
 
   const findByUsername = (username) => {
-    knex("users")
+    return knex("users")
       .where({ username })
       .select("*")
       .limit(1);
   };
 
   const loginUser = (username, password) => {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let foundUser;
 
       findByUsername(username)
         .then(([user]) => {
           if (user) {
             foundUser = user;
-            return verify(password, user.password_hashed);
+            return verify(password, user.password);
           } else {
             reject("user not found");
           }
@@ -52,22 +53,9 @@ module.exports = (knex) => {
 
 
   return {
-    register: (username, email, password) => {
-      new Promise((resolve, reject) => {
-        registerUser(username, email, password)
-          .then((result)=>console.log(result))
-          // .then((user) => resolve(user))
-          // .catch(e => reject(e));
-      });
-    },
+    register: registerUser,
 
-    login: (username, password) => {
-      new Promise((resolve, reject) => {
-        loginUser(username, password)
-          .then(([user]) => resolve(user))
-          .catch((e) => reject(e));
-      });
-    },
+    login: loginUser,
 
     findByUsername
   };
