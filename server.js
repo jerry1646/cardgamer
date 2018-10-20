@@ -19,6 +19,7 @@ const http          = require('http').Server(app);
 //DATABASE CONFIGURATION
 const knexConfig    = require("./knexfile");
 const db            = require("knex")(knexConfig[ENV]);
+const users         = require("./models/user.js")(db);
 
 //LOGGING SOFTWARE
 const morgan        = require('morgan');
@@ -100,8 +101,9 @@ app.use("/api/users", usersRoutes(db));
 // Home page
 app.get("/", (req, res) => {
   res.render("index");
-  // res.redirect("/welcome");
 });
+
+
 
 //REAL HOME PAGE
 app.get("/welcome", (req, res) => {
@@ -116,24 +118,35 @@ app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
   if(username && password) {
-    db('users')
-    .where('username', username)
-    .select('*').limit(1)
-    .catch( (err) => {
-      console.log("User does not exist");
-      res.redirect("/login");
+    users
+    .login(username, password)
+    .then(user => {
+      req.session.username = user.username;
+      res.redirect("/welcome");
     })
-    .then( ([user]) => {
-      bcrypt.compare(password, user.password).then(function(match) {
-        if(match === true) {
-          req.session.username = username;
-          res.redirect("/welcome");
-        } else if (match === false) {
-          console.error("Failed login");
-          res.redirect('/login');
-        }
-      });
+    .catch(e => {
+      console.error(e);
+      req.flash("errors", "Invalid username");
+      res.redirect("/login");
     });
+    // db('users')
+    // .where('username', username)
+    // .select('*').limit(1)
+    // .catch( (err) => {
+    //   console.log("User does not exist");
+    //   res.redirect("/login");
+    // })
+    // .then( ([user]) => {
+    //   bcrypt.compare(password, user.password).then(function(match) {
+    //     if(match === true) {
+    //       req.session.username = username;
+    //       res.redirect("/welcome");
+    //     } else if (match === false) {
+    //       console.error("Failed login");
+    //       res.redirect('/login');
+    //     }
+    //   });
+    // });
   } else {
     console.log("Empty username and password");
   }
@@ -149,19 +162,33 @@ app.post("/register", (req, res) => {
   const { username, email, password, password_confirm } = req.body;
 
   if(username && email && password) {
-    bcrypt.hash(password, 10).then(function(password) {
-      // Store hash in your password DB.
-      db("users")
-      .insert({username, email, password})
-      .catch( (err) => {
-        console.log("Username or Email already taken!", err);
-        res.redirect("/register");
-      })
-      .then( () => {
-        req.session.username = username;
-        res.redirect("/welcome");
-      });
-    });
+    users.register(username,email,password)
+
+      // .then((user) => {
+      //   req.session.username = user.username;
+      //   res.redirect("/welcome");
+      // })
+      // .catch(e => {
+      //   console.error(e);
+      //   res.redirect("/register");
+      // });
+
+
+
+
+    // bcrypt.hash(password, 10).then(function(password) {
+    //   // Store hash in your password DB.
+    //   db("users")
+    //   .insert({username, email, password})
+    //   .catch( (err) => {
+    //     console.log("Username or Email already taken!", err);
+    //     res.redirect("/register");
+    //   })
+    //   .then( () => {
+    //     req.session.username = username;
+    //     res.redirect("/welcome");
+    //   });
+    // });
   } else {
     console.log("Empty Fields!");
     res.redirect("/register");
