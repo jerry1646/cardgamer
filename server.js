@@ -19,6 +19,7 @@ const http          = require('http').Server(app);
 //DATABASE CONFIGURATION
 const knexConfig    = require("./knexfile");
 const db            = require("knex")(knexConfig[ENV]);
+const users         = require("./models/user.js")(db);
 
 //LOGGING SOFTWARE
 const morgan        = require('morgan');
@@ -70,29 +71,21 @@ app.use((req, res, next) => {
 
   if(username) {
 
-    return db('users')
-    .where('username', username)
-    .select('id', 'username')
-    .then( (rows) => {
-      let user = rows[0];
-      if(user) {
+    return users
+      .findByUsername(username)
+      .then(([user]) => {
         req.currentUser = user;
-      } else {
+      })
+      .catch(() => {
         req.currentUser = anonUser;
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      req.currentUser = anonUser;
-    })
-    .then(() => {
-      return next();
-    });
-  } else {
-    req.currentUser = anonUser;
-    next();
+      })
+      .then(next, next);
   }
+
+  req.currentUser = anonUser;
+  next();
 });
+
 
 // Mount all resource routes
 app.use("/api/users", usersRoutes(db));
@@ -100,12 +93,7 @@ app.use("/api/users", usersRoutes(db));
 // Home page
 app.get("/", (req, res) => {
   res.render("welcome", {user: req.currentUser});
-  // res.redirect("/welcome");
-});
-
-//REAL HOME PAGE
-app.get("/welcome", (req, res) => {
-  res.render("welcome", {user: req.currentUser});
+  // res.render("index");
 });
 
 app.get("/login", (req, res) => {
@@ -121,23 +109,16 @@ app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
   if(username && password) {
-    db('users')
-    .where('username', username)
-    .select('*').limit(1)
-    .catch( (err) => {
-      console.log("User does not exist");
-      res.redirect("/login");
+    users
+    .login(username, password)
+    .then(user => {
+      req.session.username = username;
+      res.redirect("/");
     })
-    .then( ([user]) => {
-      bcrypt.compare(password, user.password).then(function(match) {
-        if(match === true) {
-          req.session.username = username;
-          res.redirect("/welcome");
-        } else if (match === false) {
-          console.error("Failed login");
-          res.redirect('/login');
-        }
-      });
+    .catch(e => {
+      console.log('Failed login')
+      console.error(e);
+      res.redirect("/login");
     });
   } else {
     console.log("Empty username and password");
@@ -154,19 +135,17 @@ app.post("/register", (req, res) => {
   const { username, email, password, password_confirm } = req.body;
 
   if(username && email && password) {
-    bcrypt.hash(password, 10).then(function(password) {
-      // Store hash in your password DB.
-      db("users")
-      .insert({username, email, password})
-      .catch( (err) => {
-        console.log("Username or Email already taken!", err);
-        res.redirect("/register");
-      })
-      .then( () => {
+    users.register(username, email, password)
+
+      .then(() => {
         req.session.username = username;
-        res.redirect("/welcome");
+        res.redirect("/");
+      })
+      .catch(e => {
+        console.log('Username or Email already taken!');
+        console.error(e);
+        res.redirect("/register");
       });
-    });
   } else {
     console.log("Empty Fields!");
     res.redirect("/register");
@@ -175,7 +154,7 @@ app.post("/register", (req, res) => {
 
 app.get("/logout", (req, res) => {
   req.session = null;
-  res.redirect('/welcome');
+  res.redirect('/');
 });
 const server = app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
