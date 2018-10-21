@@ -1,8 +1,10 @@
 body {
   background-color: #EEE;
 }
-
-.wargamecontainer {
+.wargame {
+  position: relative;
+}
+.wargamecontainer, .wargame {
   height: 600px;
   width:600px;
   margin: auto;
@@ -44,7 +46,7 @@ body {
   padding-bottom:: 20px;
 }
 
-#p1hand, #p2hand {
+#p1hand, #p2hand, .p1draw {
   width: 75px;
   height: 115px;
   margin: auto;
@@ -68,12 +70,12 @@ body {
 }
 
 .p1draw {
-  z-index: 5;
-  margin: auto;
-  width: 75px;
-  height: 115px;
-  top: 660px;
+  z-index: 4;
+  top: 465px;
+  right: 263px;
   position: absolute;
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 0.25em;
 }
 
 #p1carddrawnbox, #p2carddrawnbox {
