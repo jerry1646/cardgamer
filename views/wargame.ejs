@@ -26,6 +26,7 @@
     <!-- <h1>CardGamer</h1> -->
     </nav>
     </section>
+    <div class = "jumbotron">
     <button class="newwargame">
       <span>
         New War Game
@@ -36,11 +37,27 @@
           end War Game
         </span>
       </button>
-<div class='gametitlesection'></div>
 
-      <section class="wargamecontainer">
+      <section class="wargamecontainer" >
       </section>
-
+      <div id ="scorebox">
+          <table>
+              <tbody>
+              <tr>
+              <td>TURN: </td>
+              <td><p id = 'turn'>1</p></td>
+              </tr>
+              <tr>
+              <td>MY SCORE: </td>
+              <td><p id = 'my-score'>0</p></td>
+              </tr>
+              <tr>
+              <td>OPPONENT SCORE:</td>
+              <td><p id = 'op-score'>0</p></td>
+              </tr>
+              </tbody>
+              </table>
+    </div>
       <h2>event buttons for testing</h2>
         <!-- <button class="p2disconnect">
             <span>
@@ -52,12 +69,6 @@
             DRAW CARD
           </span>
         </button>
-
-    <div>
-      Turn: <p id = 'turn'>0</p>
-      My score: <p id = 'my-score'>0</p>
-      Opponent score: <p id = 'op-score'>0</p>
-    </div>
   </body>
   <!-- SOCKET SCRIPTS -->
   <script src="/socket.io/socket.io.js"></script>

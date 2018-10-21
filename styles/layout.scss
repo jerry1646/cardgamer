@@ -11,7 +11,16 @@ body {
   flex-direction: column;
   
 }
-
+#scorebox {
+  height: 130px;
+  width:200px;
+  background-color: rgb(184, 184, 184);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5em;
+  margin-top: 20px;
+}
 .stats {
   padding-top: 20px;
   height: 200px;
