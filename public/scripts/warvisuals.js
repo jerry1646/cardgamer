@@ -116,7 +116,13 @@ function gameload(){
   let $gametitle = $("<h2>").addClass('title').text("Game of War");
   $('.wargamecontainer').append($waitingmessage);
   $('.gametitlesection').prepend($gametitle)
-
+  
+  //emit game load
+  var registration = {
+    uid: randomlyGeneratedUID,
+    gameType: "war"
+  };
+  socket.emit('register', registration);
 }
 
 //player 2 disconnected
@@ -132,6 +138,7 @@ $('.wargamecontainer').append($disconnectmessage);
 //loads game of war code
 function gameconnect(){
   $('.wargamecontainer').empty();
+  $('.p1draw').show();
     //add game of war visuals to page\
     // let wargame = `
     // <div id="cardcontainer">
@@ -163,6 +170,7 @@ function gameconnect(){
     let $playfield = $("<section>").attr('id', 'middlefield');
     let $p2cardbox = $("<div>").attr('id', 'p2carddrawnbox');
     let $p1cardbox = $("<div>").attr('id', 'p1carddrawnbox');
+    let $draw = $('<button>').addClass('p1draw');
     // $p1card.append($p1cardimg)
     $p1hand.append($p1card, $p1cardbox);
     $p2hand.append($p2card, $p2cardbox);
@@ -215,7 +223,8 @@ function cardmove(param) {
       setTimeout(function () {
           $('#p1carddrawnbox').empty();
           $('#p2carddrawnbox').empty();
-          console.log("cards cleared")
+          // console.log("cards cleared")
+          $('.p1draw').show();
         }, 3000);
     }
   }, 500);
@@ -263,8 +272,10 @@ $(document).ready(function() {
   //hide and show certain items
   if ($('.wargamecontainer').is(":visible")) {
     $('.endwargame').hide();
-    $('.wargamecontainer').hide();}
-
+    $('.p1draw').hide();
+    // $('.wargamecontainer').hide();
+    gameload();
+  }
 //send player ready and load gamebox
 $(".newwargame").on("click", function(event) {
   $('.newwargame').hide();
@@ -272,13 +283,13 @@ $(".newwargame").on("click", function(event) {
   //"JOIN GAME ACTION"
   //Provide server with userId upon "JOIN GAME ACTION"
   //ASSIGN GAMETYPE FROM DROP DOWN LIST OF GAMES
-  var registration = {
-    uid: randomlyGeneratedUID,
-    gameType: "war"
-  };
-  socket.emit('register', registration);
-  console.log(randomlyGeneratedUID);
-  console.log("newwargame started game init");
+  // var registration = {
+  //   uid: randomlyGeneratedUID,
+  //   gameType: "war"
+  // };
+  // socket.emit('register', registration);
+  // console.log(randomlyGeneratedUID);
+  // console.log("newwargame started game init");
   })
 
 //2nd player disconnect
@@ -297,6 +308,7 @@ $("#p1card").on("click", function(event) {
 
 //when player 1 plays card
 $(".p1draw").on("click", function(event) {
+  $('.p1draw').hide();
   var data = {
     gameId: gameId,
     uid: randomlyGeneratedUID
