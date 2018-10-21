@@ -21,6 +21,7 @@ const http          = require('http').Server(app);
 const knexConfig    = require("./knexfile");
 const db            = require("knex")(knexConfig[ENV]);
 const users         = require("./models/user.js")(db);
+const games         = require("./models/games.js")(db);
 
 //LOGGING SOFTWARE
 const morgan        = require('morgan');
@@ -101,8 +102,18 @@ app.use("/api/users", usersRoutes(db));
 
 // Home page
 app.get("/", (req, res) => {
-  res.render("welcome", {user: req.currentUser, info: req.flash('info') });
-  // res.render("index");
+  if (req.currentUser.id != -1){
+  // find user's game record
+  let result = games.findGames(req.currentUser.username)
+    .then((rows) => {
+      let templateVars = {
+        user: req.currentUser, gameHistory: rows, info: req.flash('info')
+      };
+      // res.render("welcome", templateVars);
+      res.send(templateVars);
+    })
+    .catch((err) => console.error(err));
+  }
 });
 
 app.get("/login", (req, res) => {
@@ -114,9 +125,37 @@ app.get("/register", (req, res) => {
   res.render("register", {user: req.currentUser, info: req.flash('info') });
 });
 
+app.get("/leaderboard", (req, res) => {
+  // load all user data
+  users.findAllUser()
+    .then((rows) => {
+      let results = [];
+      for (let row of rows){
+        let username = row.username;
+        let winCount = row.win;
+        let loseCount = row.lose;
+        let score = winCount*10 - loseCount*5;
+
+        let templateVars = {
+          username, winCount, loseCount, score
+        };
+        results.push(templateVars);
+      }
+
+      // result is [{player1data}, {}, ...]
+      res.send(results);
+    })
+    .catch((err) => console.error(err));
+})
+
 //War game page
 app.get("/wargame", (req, res) => {
-  res.render("wargame", {user: req.currentUser, info: req.flash('info')});
+  if (req.currentUser.id == -1){
+    // Send error message: NEED LOG IN
+    res.redirect('/login');
+  } else{
+    res.render("wargame", {user: req.currentUser, info: req.flash('info')});
+  }
 });
 
 app.post("/login", (req, res) => {
