@@ -138,6 +138,8 @@ app.post("/login", (req, res) => {
     });
   } else {
     console.log("Empty username and password");
+    req.flash('info', `GIVE ME STUFF TO WORK WITH`)
+    res.redirect("/login");
   }
 
 });

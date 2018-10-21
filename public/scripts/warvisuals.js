@@ -132,23 +132,44 @@ $('.wargamecontainer').append($disconnectmessage);
 //loads game of war code
 function gameconnect(){
   $('.wargamecontainer').empty();
-    //add game of war visuals to page
+    //add game of war visuals to page\
+    // let wargame = `
+    // <div id="cardcontainer">
+    //   <div id="p2hand">
+    //     <img src="/images/cards/purple_back.png" id="p2card">
+    //     <div id="p2carddrawnbox">
+    //     </div>
+    //   </div>
+    // </div>
+    // <section id="middlefield">
+    // </section>
+    // <div id="cardcontainer">
+    //   <div id="p1hand">
+    //     <button id="p1card" type="button">
+    //       <img src="/images/cards/red_back.png" id="p1cardimg">
+    //     </button>
+    //     <div id="p1carddrawnbox">
+    //     </div>
+    //   </div>
+    // </div>`
     let $p1cardcontainer = $("<div>").attr('id', 'cardcontainer');
     let $p2cardcontainer = $("<div>").attr('id', 'cardcontainer');
     let $p1hand = $("<div>").attr('id', 'p1hand');
     let $p2hand = $("<div>").attr('id', 'p2hand');
     let $p2card = $("<img>").attr('src', "/images/cards/purple_back.png").attr('id', 'p2card');;
-    let $p1card = $('<button>').attr('id', 'p1card').attr('type', 'button');;
-    let $p1cardimg = $("<img>").attr('src', "/images/cards/red_back.png").attr('id', 'p1cardimg');
+    let $p1card = $("<img>").attr('src', "/images/cards/red_back.png").attr('id', 'p1card');;
+    // let $p1card = $('<button>').attr('id', 'p1card').attr('type', 'button');;
+    // let $p1cardimg = $("<img>").attr('src', "/images/cards/red_back.png").attr('id', 'p1cardimg');
     let $playfield = $("<section>").attr('id', 'middlefield');
     let $p2cardbox = $("<div>").attr('id', 'p2carddrawnbox');
     let $p1cardbox = $("<div>").attr('id', 'p1carddrawnbox');
-    $p1card.append($p1cardimg)
+    // $p1card.append($p1cardimg)
     $p1hand.append($p1card, $p1cardbox);
     $p2hand.append($p2card, $p2cardbox);
     $p1cardcontainer.append($p1hand)
     $p2cardcontainer.append($p2hand)
     $('.wargamecontainer').append($p2cardcontainer, $playfield, $p1cardcontainer);
+    // $('.wargamecontainer').append(wargame);
 }
 
 //p1draw
@@ -202,9 +223,11 @@ function cardmove(param) {
 
 //display player scores
 function setScore(param) {
-  $('#my-score').text(param.players[randomlyGeneratedUID].score);
-  $('#op-score').text(param.players[opponentUID].score);
-  $('#turn').text(param.turn);
+  setTimeout(function () {
+    $('#my-score').text(param.players[randomlyGeneratedUID].score);
+    $('#op-score').text(param.players[opponentUID].score);
+    $('#turn').text(param.turn + 1);
+    }, 3500);
 }
 
 // display winner message
