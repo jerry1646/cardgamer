@@ -103,16 +103,6 @@ socket.on('update', (message) => {
   console.log(message);
 });
 
-//end of game
-socket.on('end-game', () => {
-  data = {
-    // gameId:
-    uid: randomlyGeneratedUID
-  }
-  socket.emit('end-game', data)
-  console.log('game ended MISSING gameId');
-
-});
 
 // FUNCTIONS -------------------------------------------------------------------------
 //initial game load and waiting for other player
@@ -230,6 +220,7 @@ function gameEndCheck(param){
       $('.newwargame').show();
       $('.endwargame').hide();
       displaygameWinner(param);
+      socket.emit('end-game', {uid: randomlyGeneratedUID});
       console.log("send end game")
 }
 }

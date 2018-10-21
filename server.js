@@ -171,6 +171,14 @@ let gameManager = require('./lib/game-manager')(io);
 
 io.on('connection', function(socket) {
 
+
+  // Get username from cookieSession middleware
+  let cookie_string = socket.request.headers.cookie;
+  let req = { headers : {cookie : cookie_string} }
+  cookieSession({ keys: ["jbkbjkk"] })(req, {}, function(){})
+  let username = req.session.username;
+
+
   let playerStatus = {/* CONNECTION DROP HANDLER */};
   console.log(`Socket: ${socket.id} connected...`);
 
@@ -213,10 +221,13 @@ io.on('connection', function(socket) {
         console.log("-->REGISTRATION:","-USER-",socket.id, "-MSG-", uid);
 
         let newPlayer = {
+          username: username,
           socketId: socket.id,
           uid: uid,
           connected: true
         };
+
+        // console.log('newPlayer: ',newPlayer.username);
 
         socketManager.addToList(newPlayer);
         queueManager.addToQueue(newPlayer);
