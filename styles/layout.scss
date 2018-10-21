@@ -5,16 +5,17 @@ body {
 .wargamecontainer {
   height: 600px;
   width:600px;
-  background-color: grey;
   margin: auto;
   display: flex;
   flex-direction: column;
-  
+  background: url(https://us.123rf.com/450wm/natalt/natalt1202/natalt120200034/12447589-poker-table-felt-background-in-green-color.jpg?ver=6) center;
+  background-size: cover;
+  border-radius: 0.5em;
 }
 #scorebox {
   height: 130px;
   width:200px;
-  background-color: rgb(184, 184, 184);
+  // background-color: rgb(184, 184, 184);
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -32,10 +33,9 @@ body {
 #middlefield{
   height: 400px;
 }
+
 #cardcontainer {
-  // margin: auto;
-  // float: top;
-  background-color: rgb(138, 138, 138);
+  background-color: rgba(138, 138, 138, 0.548);
   height: 200px;
   width: 100%;
   display: flex;
@@ -45,21 +45,10 @@ body {
 }
 
 #p1hand, #p2hand {
-  // display: flex;
-  // flex-direction: column;
-
   width: 75px;
   height: 115px;
   margin: auto;
-  
 }
-// #p2card {
-//   width: 75px;
-//   height: auto;
-//   margin: auto;
-// }
-
-
 
 #p1card, #p2card, #p1cardimg, #p1carddrawn, #p2carddrawn {
   width: 75px;
@@ -67,7 +56,6 @@ body {
   margin: auto;
   padding: 0;
   border-radius: 0.25em;
-  // position: absolute;
 }
 
 #p1card, #p2card {
@@ -85,33 +73,10 @@ body {
   width: 75px;
   height: 115px;
   top: 660px;
-  
-  position: absolute
+  position: absolute;
 }
 
 #p1carddrawnbox, #p2carddrawnbox {
   float: left;
 }
-
-
-// #p1card:hover {
-//   border: white 1px solid;
-// }
-// #nav-bar {
-//   height: 80px;
-//   position: fixed;
-//   top: 0;
-//   width: 100%;
-//   background-color: #00a087;
-//   color: #e8fdff;
-//   padding-left: 2em;
-// }
-
-// #nav-bar h1 {
-//   color: #244751;
-//   padding-left: 10px;
-//   float: left;
-//   font-size: 2em;
-//   line-height: 80px
-// }
 
