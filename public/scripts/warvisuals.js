@@ -163,12 +163,16 @@ function gameconnect(){
 
 //p1draw
 function p1draw(param){
-  if (param && !document.getElementById("#p1carddrawnbox")){
+  if (param && $('#p1carddrawn').length > 0){
+    setTimeout(function () {
+      $("#p1carddrawn").animate({left: '+=0px'});
+    }, 500);
+  } else if (param) {
     p1drawnCard = `/images/cards/${param}.png`;
-    let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
+    // let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
     $('#p1carddrawnbox').empty();
-    $('#p1carddrawnbox').append($p1card)
-    // $('#p1carddrawnbox').append(`<img src = '${p1drawnCard}' id = 'p1carddrawn'>`)
+    // $('#p1carddrawnbox').append($p1card)
+    $('#p1carddrawnbox').append(`<img src = '${p1drawnCard}' id = 'p1carddrawn'>`)
     setTimeout(function () {
       $("#p1carddrawn").animate({left: '+=75px'});
     }, 500);
@@ -177,14 +181,16 @@ function p1draw(param){
 
 //p2draw
 function p2draw(param){
-  if (param && !document.getElementById("#p2carddrawnbox")){
-    p2drawnCard = `/images/cards/${param}.png`;
-    let $p2card = $("<img>").attr('src', p2drawnCard).attr('id', 'p2carddrawn');;
-    $('#p2carddrawnbox').empty();
-    $('#p2carddrawnbox').append($p2card)
-    // $('#p2carddrawnbox').append(`<img src = '${p2drawnCard}' id = 'p2carddrawn'>`);
+  if (param && $('#p2carddrawn').length > 0){
     setTimeout(function () {
-      $("#p2carddrawn").animate({right: '+=75px'});
+      $("#p2carddrawn").animate({left: '+=0px'});
+    }, 500);
+  } else if (param) {
+    p2drawnCard = `/images/cards/${param}.png`;
+    $('#p2carddrawnbox').empty();
+    $('#p2carddrawnbox').append(`<img src = '${p2drawnCard}' id = 'p2carddrawn'>`)
+    setTimeout(function () {
+      $("#p2carddrawn").animate({left: '-=75px'});
     }, 500);
   }
 }
@@ -194,7 +200,7 @@ function cardmove(param) {
   setTimeout(function () {
     if (param.roundWinner) {
       $("#p2carddrawn").animate({right: '+=70px', top: '+=220px'});
-      $("#p1carddrawn").animate({left: '+=70px', bottom: '+=220px'});
+      $("#p1carddrawn").animate({bottom: '+=220px'});
       setTimeout(function () {
           $('#p1carddrawnbox').empty();
           $('#p2carddrawnbox').empty();
