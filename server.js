@@ -106,12 +106,17 @@ app.get("/", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("login", {user: req.currentUser});
+  res.render("login", {user: req.currentUser, info: req.flash('info')});
+});
+
+
+app.get("/register", (req, res) => {
+  res.render("register", {user: req.currentUser, info: req.flash('info') });
 });
 
 //War game page
 app.get("/wargame", (req, res) => {
-  res.render("wargame", {user: req.currentUser});
+  res.render("wargame", {user: req.currentUser, info: req.flash('info')});
 });
 
 app.post("/login", (req, res) => {
@@ -122,22 +127,19 @@ app.post("/login", (req, res) => {
     .login(username, password)
     .then(user => {
       req.session.username = username;
-      req.flash('info', 'Flash is back!')
+      req.flash('info', `signed in as ${req.session.username}`)
       res.redirect("/");
     })
     .catch(e => {
       console.log('Failed login')
       console.error(e);
+      req.flash('info', `FAILED LOGIN!!! USERNAME OR PASSWORD DOES NOT MATCH`)
       res.redirect("/login");
     });
   } else {
     console.log("Empty username and password");
   }
 
-});
-
-app.get("/register", (req, res) => {
-  res.render("register", {user: req.currentUser});
 });
 
 app.post("/register", (req, res) => {
