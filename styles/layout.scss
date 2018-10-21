@@ -79,6 +79,16 @@ body {
   z-index: 3;
 }
 
+.p1draw {
+  z-index: 5;
+  margin: auto;
+  width: 75px;
+  height: 115px;
+  top: 660px;
+  
+  position: absolute
+}
+
 #p1carddrawnbox, #p2carddrawnbox {
   float: left;
 }

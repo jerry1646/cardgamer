@@ -27,19 +27,16 @@
     </nav>
     </section>
     <div class = "jumbotron">
-    <button class="newwargame">
+      <section class="wargamecontainer" >
+      
+      </section>
+      <div id = drawbox>
+          <button class="p1draw">
       <span>
-        New War Game
+        DRAW CARD
       </span>
     </button>
-    <button class="endwargame">
-        <span>
-          end War Game
-        </span>
-      </button>
-
-      <section class="wargamecontainer" >
-      </section>
+  </div>
       <div id ="scorebox">
           <table>
               <tbody>
@@ -59,16 +56,21 @@
               </table>
     </div>
       <h2>event buttons for testing</h2>
-        <!-- <button class="p2disconnect">
+      <!-- <button class="newwargame">
+          <span>
+            New War Game
+          </span>
+        </button> -->
+        <button class="endwargame">
+            <span>
+              end War Game
+            </span>
+          </button>
+        <button class="p2disconnect">
             <span>
               p2 disconnected
             </span>
-          </button> -->
-      <button class="p1draw">
-          <span>
-            DRAW CARD
-          </span>
-        </button>
+          </button>
   </body>
   <!-- SOCKET SCRIPTS -->
   <script src="/socket.io/socket.io.js"></script>
