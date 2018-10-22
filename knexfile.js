@@ -23,11 +23,11 @@ module.exports = {
 
   production: {
     client: 'postgresql',
-    connection: "postgres: //wgxoswdulxcatc:7974edde130775862bf7757fed1bc9d4d9db90748405d400ceee706e4253ca70@ec2-54-204-14-96.compute-1.amazonaws.com:5432/d65aipjv695b7v" + '?ssl=true',
-    pool: {
-      min: 2,
-      max: 10
-    },
+    connection: process.env.DATABASE_URL + '?ssl=true',
+    // pool: {
+    //   min: 2,
+    //   max: 10
+    // },
     migrations: {
       directory: './db/migrations',
       tableName: 'migrations'
