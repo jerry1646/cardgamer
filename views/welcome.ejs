@@ -28,21 +28,23 @@
       <div class="jumbotron blurred-box" id="user-content">
         <div class="user-info-box">
           <% if (user.username) { %>
+          <h3>My Recent Games</h3>
+          <p></p>
             <table class = 'table'>
               <thead>
                 <tr>
-                  <th scope="col">Date</th>
-                  <th scope="col">Card Game</th>
-                  <th scope="col">Winner</th>
-                  <th scope="col">Loser</th>
+                  <th class="text-center" scope="col">Date</th>
+                  <th class="text-center" scope="col">Card Game</th>
+                  <th class="text-center" scope="col">Winner</th>
+                  <th class="text-center" scope="col">Loser</th>
                 </tr>
               </thead>
             <% for (let row in gameHistory) {%>
               <% let date = gameHistory[row].created_at %>
               <% if (gameHistory[row].draw == true) {%>
               <tbody>
-                <tr>
-                  <th scope="row"><%=  date.toDateString() %></th>
+                <tr class="text-center">
+                  <td scope="row"><%=  date.toDateString() %></th>
                 <td><%=  gameHistory[row].gametype %></td>
                 <td><%=  gameHistory[row].winner %> (draw)</td>
                 <td><%=  gameHistory[row].loser %> (draw)</td>
@@ -50,8 +52,8 @@
               </tbody>
               <% } else{ %>
               <tbody>
-                <tr>
-                  <th scope="row"><%=  date.toDateString() %></th>
+                <tr class="text-center">
+                  <td scope="row"><%=  date.toDateString() %></th>
                 <td><%=  gameHistory[row].gametype %></td>
                 <td><%=  gameHistory[row].winner %></td>
                 <td><%=  gameHistory[row].loser %></td>
