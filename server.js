@@ -3,14 +3,14 @@
 require('dotenv').config();
 
 const PORT          = process.env.PORT || 8080;
-const ENV           = process.env.DATABASE_URL || "development";
+const ENV           = process.env.ENV || "development";
 // const ENV           = "production" || "development";
 const express       = require("express");
 const bodyParser    = require("body-parser");
 const sass          = require("node-sass-middleware");
 const app           = express();
 const flash         = require('connect-flash');
-const cookieParser  = require('cookie-parser')
+const cookieParser  = require('cookie-parser');
 
 const cookieSession = require('cookie-session');
 const bcrypt        = require('bcrypt');
@@ -53,9 +53,9 @@ app.use("/styles", sass({
 
 app.use(express.static("public"));
 
-// if(process.env.ENV === 'production') {
-//   app.use(express.static('client/build'));
-// }
+if(process.env.ENV === 'production') {
+  app.use(express.static('client/build'));
+}
 
 app.use(cookieSession({
   name: 'session',
