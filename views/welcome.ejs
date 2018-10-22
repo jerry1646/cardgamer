@@ -27,6 +27,33 @@
 
       <div class="jumbotron" id="user-content">
         <% if (user.username) { %>
+          <table class = 'table'>
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Card Game</th>
+                <th scope="col">Winner</th>
+                <th scope="col">Loser</th>
+              </tr>
+            </thead>
+
+            <% if (gameHistory[row].draw == true) {%>
+            <tbody>
+              <tr>
+                <th scope="row"><%=  gameHistory[row].created_at.splice(0,11) %></th>
+              </tr>
+              <td><%=  gameHistory[row].gametype %></td>
+              <td><%=  gameHistory[row].winner %></td>
+              <td><%=  gameHistory[row].loser %></td>
+            </tbody>
+            <% } else{ %>
+
+
+          </table>
+
+
+
+
           <ul>
           <% for (let row in gameHistory) {%>
             <% if (gameHistory[row].draw == true) {%>
@@ -36,6 +63,9 @@
               <li>Time: <%=  gameHistory[row].created_at %> Game: <%=  gameHistory[row].gametype %> Winner: <%=  gameHistory[row].winner %> Loser: <%=  gameHistory[row].loser %></li>
             <% } %>
           </ul>
+
+
+
         <% }} else {%>
           <p>Hi newbee you need log in or register to play the game</p>
         <% } %>
