@@ -27,19 +27,40 @@
 
       <div class="jumbotron" id="user-content">
         <% if (user.username) { %>
-          <ul>
+          <table class = 'table'>
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Card Game</th>
+                <th scope="col">Winner</th>
+                <th scope="col">Loser</th>
+              </tr>
+            </thead>
           <% for (let row in gameHistory) {%>
+            <% let date = gameHistory[row].created_at %>
             <% if (gameHistory[row].draw == true) {%>
-              <li>Time: <%=  gameHistory[row].created_at %> Game: <%=  gameHistory[row].gametype %> Winner: <%=  gameHistory[row].winner %> (draw) Loser: <%=  gameHistory[row].loser %> (draw)</li>
-
+            <tbody>
+              <tr>
+                <th scope="row"><%=  date.toDateString() %></th>
+              <td><%=  gameHistory[row].gametype %></td>
+              <td><%=  gameHistory[row].winner %> (draw)</td>
+              <td><%=  gameHistory[row].loser %> (draw)</td>
+              </tr>
+            </tbody>
             <% } else{ %>
-              <li>Time: <%=  gameHistory[row].created_at %> Game: <%=  gameHistory[row].gametype %> Winner: <%=  gameHistory[row].winner %> Loser: <%=  gameHistory[row].loser %></li>
-            <% } %>
-          </ul>
-        <% }} else {%>
-          <p>Hi newbee you need log in or register to play the game</p>
-        <% } %>
-
+            <tbody>
+              <tr>
+                <th scope="row"><%=  date.toDateString() %></th>
+              <td><%=  gameHistory[row].gametype %></td>
+              <td><%=  gameHistory[row].winner %></td>
+              <td><%=  gameHistory[row].loser %></td>
+              </tr>
+            </tbody>
+            <% }} %>
+          </table>
+          <% } else {%>
+              <p>Hi newbee you need log in or register to play the game</p>
+          <% } %>
       </div>
     </main>
   </body>

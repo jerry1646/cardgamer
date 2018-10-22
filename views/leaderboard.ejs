@@ -22,11 +22,27 @@
     <main>
       <div class="jumbotron" id="welcome-message">
         <h1>Leaderboard</h1>
-        <ul>
-          <% for (let players of results) {%>
-          <li><%= players %></li>
-          <% } %>
-        </ul>
+          <table class = 'table'>
+            <thead>
+              <tr>
+                <th scope="col">Username</th>
+                <th scope="col"># Wins</th>
+                <th scope="col"># Loss</th>
+                <th scope="col">Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (let row of results) {%>
+              <tr>
+                <td scope="row"><%=  row.username %></td>
+                <td><%=  row.winCount %></td>
+                <td><%=  row.loseCount %></td>
+                <td><%=  row.score %></td>
+              </tr>
+              <% } %>
+            </tbody>
+
+
       </div>
     </main>
   </body>
