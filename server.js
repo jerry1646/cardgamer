@@ -104,15 +104,18 @@ app.use("/api/users", usersRoutes(db));
 app.get("/", (req, res) => {
   if (req.currentUser.id != -1){
   // find user's game record
-  let result = games.findGames(req.currentUser.username)
+    let result = games.findGames(req.currentUser.username)
     .then((rows) => {
       let templateVars = {
         user: req.currentUser, gameHistory: rows, info: req.flash('info')
       };
-      // res.render("welcome", templateVars);
-      res.send(templateVars);
+      console.log(templateVars.gameHistory);
+      res.render("welcome", templateVars);
+      // res.send(templateVars);
     })
     .catch((err) => console.error(err));
+  } else{
+    res.render("welcome", {user: req.currentUser, info: req.flash('info')});
   }
 });
 
@@ -143,7 +146,8 @@ app.get("/leaderboard", (req, res) => {
       }
 
       // result is [{player1data}, {}, ...]
-      res.send(results);
+      console.log(results);
+      res.render("leaderboard", {results, user: req.currentUser, info: req.flash('info') });
     })
     .catch((err) => console.error(err));
 })

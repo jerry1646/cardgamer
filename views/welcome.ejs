@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
 
+
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+    <script type="text/javascript" src="/scripts/user-pages.js"></script>
 
     <!-- EJS Partial Header -->
      <% include ./partials/head %>
@@ -18,9 +20,26 @@
       <% include ./partials/header %>
     </header>
     <main>
-      <div class="jumbotron">
+      <div class="jumbotron" id="welcome-message">
         <h1>Welcome <%= user.username %></h1>
         <a href="/wargame">War Game</a>
+      </div>
+
+      <div class="jumbotron" id="user-content">
+        <% if (user.username) { %>
+          <ul>
+          <% for (let row in gameHistory) {%>
+            <% if (gameHistory[row].draw == true) {%>
+              <li>Time: <%=  gameHistory[row].created_at %> Game: <%=  gameHistory[row].gametype %> Winner: <%=  gameHistory[row].winner %> (draw) Loser: <%=  gameHistory[row].loser %> (draw)</li>
+
+            <% } else{ %>
+              <li>Time: <%=  gameHistory[row].created_at %> Game: <%=  gameHistory[row].gametype %> Winner: <%=  gameHistory[row].winner %> Loser: <%=  gameHistory[row].loser %></li>
+            <% } %>
+          </ul>
+        <% }} else {%>
+          <p>Hi newbee you need log in or register to play the game</p>
+        <% } %>
+
       </div>
     </main>
   </body>

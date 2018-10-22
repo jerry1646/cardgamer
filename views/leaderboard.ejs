@@ -8,26 +8,25 @@
 
 
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+    <script type="text/javascript" src="/scripts/user-pages.js"></script>
 
     <!-- EJS Partial Header -->
      <% include ./partials/head %>
   </head>
 
   <body class="container">
+      <% include ./partials/flash %>
     <header>
       <% include ./partials/header %>
     </header>
     <main>
-        <% include ./partials/flash %>
-      <div class="jumbotron">
-        <h1>Login</h1>
-        <form action="/login" method="POST">
-          <label for="username">Username:</label>
-          <input type="text" name="username"/>
-          <label for="password">Password:</label>
-          <input type="password" name="password"/>
-          <input type="submit" name="submit"/>
-        </form>
+      <div class="jumbotron" id="welcome-message">
+        <h1>Leaderboard</h1>
+        <ul>
+          <% for (let players of results) {%>
+          <li><%= players %></li>
+          <% } %>
+        </ul>
       </div>
     </main>
   </body>
