@@ -132,8 +132,9 @@ app.get("/leaderboard", (req, res) => {
   // load all user data
   users.findAllUser()
     .then((rows) => {
+      console.log(rows.rows);
       let results = [];
-      for (let row of rows){
+      for (let row of rows.rows){
         let username = row.username;
         let winCount = row.win;
         let loseCount = row.lose;

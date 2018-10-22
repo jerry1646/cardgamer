@@ -86,9 +86,9 @@ module.exports = (knex) => {
   };
 
   const findAllUser = () => {
-    return knex("users")
-    .select("*")
-  }
+    return new Promise((resolve, reject) => {
+      resolve (knex.raw('select username, win, lose, (win-lose) as diff from users order by diff DESC;'))
+  })}
 
 
   return {
