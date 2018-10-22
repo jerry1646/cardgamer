@@ -97,9 +97,13 @@ socket.on('update', (message) => {
   let opponentcard = cardRef[message.cards[opponentUID]];
   p1draw(mycard);
   p2draw(opponentcard);
-  setScore(message);
   cardmove(message);
-  gameEndCheck(message);
+  displayRoundWinner(message);
+  setTimeout(function () {
+    setScore(message);
+    gameEndCheck(message);
+    }, 3500);
+
   console.log(message);
 });
 
@@ -126,13 +130,13 @@ function gameload(){
 }
 
 //player 2 disconnected
-function gamedisconnect(){
-    $('.wargamecontainer').empty();
+// function gamedisconnect(){
+//     $('.wargamecontainer').empty();
 
-let $disconnectmessage = $("<h2>").text("FRIEND LOST");
-$('.wargamecontainer').append($disconnectmessage);
+// let $disconnectmessage = $("<h2>").text("FRIEND LOST");
+// $('.wargamecontainer').append($disconnectmessage);
 
-}
+// }
 
 
 //loads game of war code
@@ -174,9 +178,10 @@ function gameconnect(){
     // $p1card.append($p1cardimg)
     $p1hand.append($p1card, $p1cardbox);
     $p2hand.append($p2card, $p2cardbox);
-    $p1cardcontainer.append($p1hand)
-    $p2cardcontainer.append($p2hand)
+    $p1cardcontainer.append($p1hand);
+    $p2cardcontainer.append($p2hand);
     $('.wargamecontainer').append($p2cardcontainer, $playfield, $p1cardcontainer);
+    $('#middlefield').append("Please Draw a Card");
     // $('.wargamecontainer').append(wargame);
 }
 
@@ -188,10 +193,13 @@ function p1draw(param){
     }, 500);
   } else if (param) {
     p1drawnCard = `/images/cards/${param}.png`;
-    // let $p1card = $("<img>").attr('src', p1drawnCard).attr('id', 'p1carddrawn');;
     $('#p1carddrawnbox').empty();
-    // $('#p1carddrawnbox').append($p1card)
     $('#p1carddrawnbox').append(`<img src = '${p1drawnCard}' id = 'p1carddrawn'>`)
+    $('#middlefield').empty();
+    if (param && $('#p2carddrawn').length > 0){
+    } else {
+      $('#middlefield').append("Waiting for opponent to draw a card.");
+    }
     setTimeout(function () {
       $("#p1carddrawn").animate({left: '+=75px'});
     }, 500);
@@ -211,6 +219,9 @@ function p2draw(param){
     setTimeout(function () {
       $("#p2carddrawn").animate({left: '-=75px'});
     }, 500);
+    if (param && $('#p1carddrawn').length > 0){
+      $('#middlefield').empty();
+    }
   }
 }
 
@@ -225,6 +236,8 @@ function cardmove(param) {
           $('#p2carddrawnbox').empty();
           // console.log("cards cleared")
           $('.p1draw').show();
+          $('#middlefield').empty();
+          $('#middlefield').append("Please Draw a Card");
         }, 3000);
     }
   }, 500);
@@ -232,11 +245,11 @@ function cardmove(param) {
 
 //display player scores
 function setScore(param) {
-  setTimeout(function () {
+  // setTimeout(function () {
     $('#my-score').text(param.players[randomlyGeneratedUID].score);
     $('#op-score').text(param.players[opponentUID].score);
     $('#turn').text(param.turn + 1);
-    }, 3500);
+    // }, 3500);
 }
 
 // display winner message
@@ -248,15 +261,31 @@ function displaygameWinner(param) {
   }
 }
 
+function displayRoundWinner(param) {
+  // setTimeout(function () {
+  //   }, 3500);
+  if (param.roundWinner && param.roundWinner === randomlyGeneratedUID){
+    setTimeout(function () {
+      $('#middlefield').empty();
+      $('#middlefield').append(`You win this round`)
+      }, 1250);
+  } else if (param.roundWinner) {
+    setTimeout(function () {
+      $('#middlefield').empty();
+      $('#middlefield').append(`You lose this round`)
+      }, 1250);
+  };
+}
+
 //game end check and actions
 function gameEndCheck(param){
   if (param.gameWinner) {
     if ($('.wargamecontainer').is(":visible")) {
-      $('.wargamecontainer').empty();
-      $('.gametitlesection').empty();
+      // $('.wargamecontainer').empty();
+      // $('.gametitlesection').empty();
       $('.wargamecontainer').slideToggle();
-      $('.newwargame').show();
-      $('.endwargame').hide();
+      // $('.newwargame').show();
+      // $('.endwargame').hide();
       displaygameWinner(param);
       socket.emit('end-game', {uid: randomlyGeneratedUID});
       console.log("send end game")

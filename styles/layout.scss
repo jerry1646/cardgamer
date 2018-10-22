@@ -4,6 +4,7 @@ body {
 .wargame {
   position: relative;
 }
+
 .wargamecontainer, .wargame {
   height: 600px;
   width:600px;
@@ -15,25 +16,19 @@ body {
   border-radius: 0.5em;
 }
 #scorebox {
-  height: 130px;
+  height: 180px;
   width:200px;
-  // background-color: rgb(184, 184, 184);
+  background-color: rgb(184, 184, 184);
   margin: auto;
   display: flex;
   flex-direction: column;
   border-radius: 0.5em;
   margin-top: 20px;
 }
-.stats {
-  padding-top: 20px;
-  height: 200px;
-  width:100px;
-  background-color: green;
-  margin: auto;
-}
 
 #middlefield{
   height: 400px;
+  position: relative;
 }
 
 #cardcontainer {
@@ -43,7 +38,7 @@ body {
   display: flex;
   flex-direction: column;
   padding-top: 20px;
-  padding-bottom:: 20px;
+  padding-bottom: 20px;
 }
 
 #p1hand, #p2hand, .p1draw {
