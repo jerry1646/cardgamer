@@ -85,6 +85,7 @@ socket.on('ready', (message) => {
   gameId = message.gameId;
   players = message.players;
   opponentUID = (players.indexOf(randomlyGeneratedUID) == 1)? players[0]: players[1];
+  console.log(message)
   console.log('My opponent is: ',opponentUID);
   console.log(gameId, "this is gameid")
   gameconnect()
@@ -254,10 +255,12 @@ function setScore(param) {
 
 // display winner message
 function displaygameWinner(param) {
-  if (param.gameWinner == randomlyGeneratedUID){
-    alert("YOU WIN!!")
+  if (param.gameWinner === randomlyGeneratedUID){
+    $('#middlefield').empty();
+    $('#middlefield').append("YOU WIN")
   } else {
-    alert("YOU'RE A LOSER ;)")
+    $('#middlefield').empty();
+    $('#middlefield').append("YOU'RE A LOSER ;)")
   }
 }
 
@@ -280,16 +283,16 @@ function displayRoundWinner(param) {
 //game end check and actions
 function gameEndCheck(param){
   if (param.gameWinner) {
-    if ($('.wargamecontainer').is(":visible")) {
+    // if ($('.wargamecontainer').is(":visible")) {
       // $('.wargamecontainer').empty();
       // $('.gametitlesection').empty();
-      $('.wargamecontainer').slideToggle();
+      // $('.wargamecontainer').slideToggle();
       // $('.newwargame').show();
-      // $('.endwargame').hide();
+      $('.p1draw').hide();
       displaygameWinner(param);
       socket.emit('end-game', {uid: randomlyGeneratedUID});
       console.log("send end game")
-}
+// }
 }
 }
 
@@ -348,7 +351,9 @@ $(".p1draw").on("click", function(event) {
 
 //disconnect and clear game
 $(".endwargame").on("click", function(event) {
-  gameend();
+  // gameEndCheck();
+  $('.p1draw').hide();
+      displaygameWinner(param);
   console.log("newwargame ended");
   });
 });
