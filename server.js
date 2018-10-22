@@ -53,9 +53,9 @@ app.use("/styles", sass({
 
 app.use(express.static("public"));
 
-if(process.env.ENV === 'production') {
-  app.use(express.static('client/build'));
-}
+// if(process.env.ENV === 'production') {
+//   app.use(express.static('client/build'));
+// }
 
 app.use(cookieSession({
   name: 'session',
