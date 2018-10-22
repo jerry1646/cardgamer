@@ -44,10 +44,6 @@ app.use(knexLogger(db));
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
-if(process.env.ENV === 'production') {
-  app.use(express.static('client/build'));
-}
-
 app.use("/styles", sass({
   src: __dirname + "/styles",
   dest: __dirname + "/public/styles",
@@ -56,6 +52,10 @@ app.use("/styles", sass({
 }));
 
 app.use(express.static("public"));
+
+if(process.env.ENV === 'production') {
+  app.use(express.static('client/build'));
+}
 
 app.use(cookieSession({
   name: 'session',
