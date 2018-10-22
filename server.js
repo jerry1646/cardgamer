@@ -3,8 +3,8 @@
 require('dotenv').config();
 
 const PORT          = process.env.PORT || 8080;
-// const ENV           = process.env.DATABASE_URL || "development";
-const ENV           = "production" || "development";
+const ENV           = process.env.DATABASE_URL || "development";
+// const ENV           = "production" || "development";
 const express       = require("express");
 const bodyParser    = require("body-parser");
 const sass          = require("node-sass-middleware");
@@ -43,6 +43,10 @@ app.use(knexLogger(db));
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
+
+if(process.env.ENV === 'production') {
+  app.use(express.static('client/build'));
+}
 
 app.use("/styles", sass({
   src: __dirname + "/styles",
