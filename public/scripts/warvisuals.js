@@ -88,6 +88,7 @@ socket.on('ready', (message) => {
   console.log(message)
   console.log('My opponent is: ',opponentUID);
   console.log(gameId, "this is gameid")
+  $('#op').text(message.usernames[players.indexOf(randomlyGeneratedUID)]);
   if ($('#playagain').length > 0 || message.usernames[0] == message.usernames[1]){
     window.location = "/wargame"; 
   } else {
@@ -120,7 +121,7 @@ function gameload(){
   if ($('.wargamecontainer').is(":hidden")) {
   $('.wargamecontainer').slideToggle();}
   $('.endwargame').show();
-
+  $('#scorebox').hide();
   let $waitingmessage = $("<h2>").text("WAITING FOR A FRIEND (｡•́︿•̀｡)").attr('id', 'waitmessage');
   let $gametitle = $("<h2>").addClass('title').text("Game of War");
   $('.wargamecontainer').append($waitingmessage);
@@ -148,6 +149,8 @@ function gameload(){
 function gameconnect(){
   $('.wargamecontainer').empty();
   $('.p1draw').show();
+  if ($('#scorebox').is(":hidden")) {
+    $('#scorebox').slideToggle();}
     //add game of war visuals to page\
     // let wargame = `
     // <div id="cardcontainer">

@@ -25,16 +25,6 @@ body {
   background-size: cover;
   border-radius: 0.5em;
 }
-#scorebox {
-  height: 180px;
-  width:200px;
-  background-color: rgb(184, 184, 184);
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  border-radius: 0.5em;
-  margin-top: 20px;
-}
 
 #middlefield{
   height: 400px;
@@ -91,3 +81,24 @@ body {
   float: left;
 }
 
+
+
+#scorebox {
+  height: 240px;
+  width:300px;
+  background-color: rgb(184, 184, 184);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.5em;
+  margin-top: 20px;
+  padding: 10px;
+}
+
+#op, #my-score, #op-score, #turn {
+  text-align: right;
+}
+
+h4{
+  text-align: center
+}
