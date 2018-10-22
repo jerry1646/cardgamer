@@ -90,7 +90,7 @@ socket.on('ready', (message) => {
   console.log(gameId, "this is gameid")
   $('#op').text(message.usernames[players.indexOf(randomlyGeneratedUID)]);
   if ($('#playagain').length > 0 || message.usernames[0] == message.usernames[1]){
-    window.location = "/wargame"; 
+    window.location = "/wargame";
   } else {
     gameconnect()
   }
@@ -126,7 +126,7 @@ function gameload(){
   let $gametitle = $("<h2>").addClass('title').text("Game of War");
   $('.wargamecontainer').append($waitingmessage);
   $('.gametitlesection').prepend($gametitle)
-  
+
   //emit game load
   var registration = {
     uid: randomlyGeneratedUID,
@@ -260,26 +260,26 @@ function setScore(param) {
     // }, 3500);
 }
 
-// display winner message and button to play again 
+// display winner message and button to play again
 function displaygameWinner(param) {
   if (param.gameWinner === randomlyGeneratedUID) {
     $('#middlefield').empty();
-    $('#middlefield').append("YOU WIN")
-    $('#middlefield').append(`<p><form action="/wargame" id=playagain>
-    <input type="submit" value="PLAY AGAIN" />
-    </form></p>`)
+    $('#middlefield').append("YOU WIN!!!")
+    $('#middlefield').append(`<div class="again-container"><form action="/wargame" id=playagain>
+    <input type="submit" class='play-again' value="PLAY AGAIN" />
+    </form></div>`)
   } else {
     $('#middlefield').empty();
     $('#middlefield').append("YOU'RE A LOSER (┛◉Д◉)┛彡┻━┻")
-    $('#middlefield').append(`<p><form action="/wargame" id=playagain>
-    <input type="submit" value="PLAY AGAIN" />
-    </form></p>`)
+    $('#middlefield').append(`<div class="again-container"><form action="/wargame" id=playagain>
+    <input type="submit" class='play-again' value="PLAY AGAIN" />
+    </form></div>`)
   }
 }
 
 // Displays round winner
 function displayRoundWinner(param) {
-  if (param.roundWinner) {  
+  if (param.roundWinner) {
     if (param.roundWinner === randomlyGeneratedUID){
       setTimeout(function () {
         $('#middlefield').empty();
@@ -295,7 +295,7 @@ function displayRoundWinner(param) {
         $('#middlefield').empty();
         $('#middlefield').append(`YOU LOSE THIS ROUND`)
         }, 1250);
-    };    
+    };
   };
 }
 
