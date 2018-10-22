@@ -1,10 +1,13 @@
 "use-strict";
 /* jshint esversion : 6 */
-require('dotenv').config();
+
+
+if(process.env.NODE_ENV === 'production') {
+  require('dotenv').config();
+}
 
 const PORT          = process.env.PORT || 8080;
-const ENV           = process.env.ENV || "development";
-// const ENV           = "production" || "development";
+const ENV           = process.env.NODE_ENV || "development";
 const express       = require("express");
 const bodyParser    = require("body-parser");
 const sass          = require("node-sass-middleware");
@@ -53,9 +56,9 @@ app.use("/styles", sass({
 
 app.use(express.static("public"));
 
-if(process.env.ENV === 'production') {
-  app.use(express.static('client/build'));
-}
+// if(process.env.ENV === 'production') {
+//   app.use(express.static('client/build'));
+// }
 
 app.use(cookieSession({
   name: 'session',
