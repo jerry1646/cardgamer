@@ -33,6 +33,7 @@ body {
   margin: auto;
   font-size: 200%;
   color: white;
+  text-align: center;
 }
 
 #cardcontainer {
@@ -43,6 +44,7 @@ body {
   flex-direction: column;
   padding-top: 20px;
   padding-bottom: 20px;
+  border-radius: 0.5em;
 }
 
 #p1hand, #p2hand, .p1draw {
@@ -101,4 +103,16 @@ body {
 
 h4{
   text-align: center
+}
+
+.again-container{
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+}
+
+.play-again{
+  margin: 0 auto;
+  border-radius: 18px;
+  font-size: 90%;
 }
