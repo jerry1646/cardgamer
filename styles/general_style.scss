@@ -3,7 +3,7 @@ body {
   background-image: url("http://i.imgur.com/4zxNYaS.jpg");
   background-repeat: no-repeat;
   background-position: center center;
-  /*background-attachment: fixed;*/
+  background-attachment: fixed;
 }
 
 main {
@@ -13,11 +13,20 @@ main {
   align-items: center;
 }
 
+#welcome {
+  display: block;
+}
+
 .navbar-default {
   background: linear-gradient(to bottom, #45484d 0%,#000000 100%);
 }
 
 #header-element {
+  color: white;
+}
+
+.jumbo-welcome {
+  background: linear-gradient(to bottom, #45484d 0%,#000000 100%);
   color: white;
 }
 
@@ -32,6 +41,18 @@ main {
 }
 
 .blurred-box {
+  z-index: 0;
+  position: relative;
+  width: 90%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: inherit;
+  overflow: hidden;
+  margin: auto;
+}
+
+.blurred-box-game {
   z-index: -1;
   position: relative;
   width: 90%;
@@ -43,8 +64,22 @@ main {
   margin: auto;
 }
 
-.blurred-box:after, .blurred-box-login:after {
+.blurred-box:after, .blurred-box-game:after {
   z-index: -1;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 0 2000px rgba(255, 255, 255, 0.2);
+  filter: blur(10px);
+}
+
+.blurred-box-login:after {
   content: '';
   width: 100%;
   height: 100%;

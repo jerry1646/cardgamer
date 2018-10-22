@@ -1,4 +1,5 @@
 body {
+  z-index: -1000;
   background-color: #EEE;
 }
 .wargame {
@@ -71,7 +72,8 @@ body {
 }
 
 .p1draw {
-  z-index: 4;
+  z-index: 10;
+  /*z-index: 4;*/
   top: 465px;
   right: 263px;
   position: absolute;
