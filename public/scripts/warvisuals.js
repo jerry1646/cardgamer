@@ -88,7 +88,11 @@ socket.on('ready', (message) => {
   console.log(message)
   console.log('My opponent is: ',opponentUID);
   console.log(gameId, "this is gameid")
-  gameconnect()
+  if ($('#playagain').length > 0 || message.usernames[0] == message.usernames[1]){
+    window.location = "/wargame"; 
+  } else {
+    gameconnect()
+  }
   console.log('p2 connected and game loaded');
 
 });
@@ -112,12 +116,12 @@ socket.on('update', (message) => {
 // FUNCTIONS -------------------------------------------------------------------------
 //initial game load and waiting for other player
 function gameload(){
-    //show game container and end button
-    if ($('.wargamecontainer').is(":hidden")) {
-      $('.wargamecontainer').slideToggle();}
-      $('.endwargame').show();
+  //show game container and end button
+  if ($('.wargamecontainer').is(":hidden")) {
+  $('.wargamecontainer').slideToggle();}
+  $('.endwargame').show();
 
-  let $waitingmessage = $("<h2>").text("WAITING FOR A FRIEND");
+  let $waitingmessage = $("<h2>").text("WAITING FOR A FRIEND (｡•́︿•̀｡)").attr('id', 'waitmessage');
   let $gametitle = $("<h2>").addClass('title').text("Game of War");
   $('.wargamecontainer').append($waitingmessage);
   $('.gametitlesection').prepend($gametitle)
@@ -253,40 +257,42 @@ function setScore(param) {
     // }, 3500);
 }
 
-// display winner message
+// display winner message and button to play again 
 function displaygameWinner(param) {
-  console.log("gamewinner");
-  console.log(param);
   if (param.gameWinner === randomlyGeneratedUID) {
     $('#middlefield').empty();
     $('#middlefield').append("YOU WIN")
-    $('#middlefield').append(`<form action="/wargame">
+    $('#middlefield').append(`<p><form action="/wargame" id=playagain>
     <input type="submit" value="PLAY AGAIN" />
-</form>`)
-    console.log("win")
+    </form></p>`)
   } else {
     $('#middlefield').empty();
     $('#middlefield').append("YOU'RE A LOSER (┛◉Д◉)┛彡┻━┻")
-    $('#middlefield').append(`<form action="/wargame">
+    $('#middlefield').append(`<p><form action="/wargame" id=playagain>
     <input type="submit" value="PLAY AGAIN" />
-</form>`)
-    console.log("lose")
+    </form></p>`)
   }
 }
 
+// Displays round winner
 function displayRoundWinner(param) {
-  // setTimeout(function () {
-  //   }, 3500);
-  if (param.roundWinner && param.roundWinner === randomlyGeneratedUID){
-    setTimeout(function () {
-      $('#middlefield').empty();
-      $('#middlefield').append(`You win this round`)
-      }, 1250);
-  } else if (param.roundWinner) {
-    setTimeout(function () {
-      $('#middlefield').empty();
-      $('#middlefield').append(`You lose this round`)
-      }, 1250);
+  if (param.roundWinner) {  
+    if (param.roundWinner === randomlyGeneratedUID){
+      setTimeout(function () {
+        $('#middlefield').empty();
+        $('#middlefield').append(`YOU WIN THIS ROUND`)
+        }, 1250);
+    } else if (param.roundWinner == "draw") {
+      setTimeout(function () {
+        $('#middlefield').empty();
+        $('#middlefield').append(`ITS A DRAW`)
+        }, 1250);
+    } else {
+      setTimeout(function () {
+        $('#middlefield').empty();
+        $('#middlefield').append(`YOU LOSE THIS ROUND`)
+        }, 1250);
+    };    
   };
 }
 
@@ -294,17 +300,11 @@ function displayRoundWinner(param) {
 function gameEndCheck(param){
   if (param.gameWinner) {
     console.log("endgame check");
-    // if ($('.wargamecontainer').is(":visible")) {
-      // $('.wargamecontainer').empty();
-      // $('.gametitlesection').empty();
-      // $('.wargamecontainer').slideToggle();
-      // $('.newwargame').show();
       $('.p1draw').hide();
       displaygameWinner(param);
       socket.emit('end-game', {uid: randomlyGeneratedUID});
       console.log("send end game")
-// }
-}
+  }
 }
 
 
@@ -312,60 +312,22 @@ function gameEndCheck(param){
 
 //on page load
 $(document).ready(function() {
-  //hide and show certain items
+
+  //SET UP GAME
   if ($('.wargamecontainer').is(":visible")) {
     $('.endwargame').hide();
     $('.p1draw').hide();
-    // $('.wargamecontainer').hide();
     gameload();
   }
-//send player ready and load gamebox
-$(".newwargame").on("click", function(event) {
-  $('.newwargame').hide();
-  gameload();
-  //"JOIN GAME ACTION"
-  //Provide server with userId upon "JOIN GAME ACTION"
-  //ASSIGN GAMETYPE FROM DROP DOWN LIST OF GAMES
-  // var registration = {
-  //   uid: randomlyGeneratedUID,
-  //   gameType: "war"
-  // };
-  // socket.emit('register', registration);
-  // console.log(randomlyGeneratedUID);
-  // console.log("newwargame started game init");
-  })
 
-//2nd player disconnect
-$(".p2disconnect").on("click", function(event) {
-  gamedisconnect();
-  console.log("p2disconnected");
-});
-
-
-//  current client drawing card
-$("#p1card").on("click", function(event) {
-  event.preventDefault();
-  console.log("p1 draw card");
-  p1draw();
-});
-
-//when player 1 plays card
-$(".p1draw").on("click", function(event) {
-  $('.p1draw').hide();
-  var data = {
-    gameId: gameId,
-    uid: randomlyGeneratedUID
-  }
-  socket.emit('draw', data);
-});
-
-
-//disconnect and clear game
-$(".endwargame").on("click", function(event) {
-  // gameEndCheck();
-  $('.p1draw').hide();
-      displaygameWinner(param);
-  console.log("newwargame ended");
+  //DRAW CARD BUTTON
+  $(".p1draw").on("click", function(event) {
+    $('.p1draw').hide();
+    var data = {
+      gameId: gameId,
+      uid: randomlyGeneratedUID
+    }
+      socket.emit('draw', data);
   });
 });
 

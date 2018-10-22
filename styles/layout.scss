@@ -5,6 +5,16 @@ body {
   position: relative;
 }
 
+#waitmessage {
+  margin: auto;
+  color: white
+}
+
+#playagain {
+  margin: auto;
+  color: black;
+}
+
 .wargamecontainer, .wargame {
   height: 600px;
   width:600px;
@@ -32,6 +42,7 @@ body {
   padding-top: 30px;
   margin: auto;
   font-size: 200%;
+  color: white;
 }
 
 #cardcontainer {
