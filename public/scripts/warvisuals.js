@@ -103,7 +103,7 @@ socket.on('update', (message) => {
   setTimeout(function () {
     setScore(message);
     gameEndCheck(message);
-    }, 3500);
+    }, 3520);
 
   console.log(message);
 });
@@ -255,12 +255,22 @@ function setScore(param) {
 
 // display winner message
 function displaygameWinner(param) {
-  if (param.gameWinner === randomlyGeneratedUID){
+  console.log("gamewinner");
+  console.log(param);
+  if (param.gameWinner === randomlyGeneratedUID) {
     $('#middlefield').empty();
     $('#middlefield').append("YOU WIN")
+    $('#middlefield').append(`<form action="/wargame">
+    <input type="submit" value="PLAY AGAIN" />
+</form>`)
+    console.log("win")
   } else {
     $('#middlefield').empty();
-    $('#middlefield').append("YOU'RE A LOSER ;)")
+    $('#middlefield').append("YOU'RE A LOSER (┛◉Д◉)┛彡┻━┻")
+    $('#middlefield').append(`<form action="/wargame">
+    <input type="submit" value="PLAY AGAIN" />
+</form>`)
+    console.log("lose")
   }
 }
 
@@ -283,6 +293,7 @@ function displayRoundWinner(param) {
 //game end check and actions
 function gameEndCheck(param){
   if (param.gameWinner) {
+    console.log("endgame check");
     // if ($('.wargamecontainer').is(":visible")) {
       // $('.wargamecontainer').empty();
       // $('.gametitlesection').empty();
