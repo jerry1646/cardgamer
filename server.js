@@ -324,7 +324,7 @@ io.on('connection', function(socket) {
       socketId: socket.id,
       connected: true
     };
-    queueManager.addToQueue(player);
+    // queueManager.addToQueue(player);
     gameManager.endGame(data.gameId);
   });
 
