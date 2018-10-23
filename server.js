@@ -69,7 +69,7 @@ app.use(cookieSession({
 }));
 
 //CONNECT-FLASH MIDDLEWARE FOR NOTIFICATIONS
-  app.use(flash())
+  app.use(flash());
 
 //USER AUTHENTICATION MIDDLEWARE
 app.use((req, res, next) => {
