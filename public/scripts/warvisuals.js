@@ -87,11 +87,13 @@ socket.on('connect', () => {
 socket.on('ready', (message) => {
   gameId = message.gameId;
   players = message.players;
+
+
   opponentUID = (players.indexOf(randomlyGeneratedUID) == 1)? players[0]: players[1];
   console.log(message)
   console.log('My opponent is: ',opponentUID);
   console.log(gameId, "this is gameid")
-  $('#op').text(message.usernames[players.indexOf(randomlyGeneratedUID)]);
+  $('#op').text(message.usernames[players.indexOf(opponentUID)]);
   if ($('#playagain').length > 0 || message.usernames[0] == message.usernames[1]){
     window.location = "/wargame";
   } else {
