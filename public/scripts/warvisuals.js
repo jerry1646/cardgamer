@@ -69,7 +69,10 @@ const cardRef = {
 // };
 
 //INITIATE SOCKET CONNECTION
-var socket = io.connect('http://localhost:8080');
+var HOST = location.origin
+var socket = io.connect(HOST);
+
+// var socket = io.connect('http://localhost:8080');
 
 
 //LISTENER FOR SOCKET
