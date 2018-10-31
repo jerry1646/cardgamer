@@ -10,9 +10,9 @@ It is also deployed on Heroku [here](https://lit-journey-41271.herokuapp.com/)
 ## Getting Started on Local Server
 
 1. Clone this repository.
-2. Install dependencies using the npm install command.
+2. Install dependencies using the "npm install" command.
 3. Update parameters in .env file in order to properly link the app to the database.
-4. Start the web server using the npm start local command. The app will be served at http://localhost:8080/.
+4. Start the web server using the "npm start local" command. The app will be served at http://localhost:8080/.
 
 ## Getting Started on Heroku
 

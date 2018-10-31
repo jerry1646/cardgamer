@@ -17,6 +17,17 @@ main {
   display: block;
 }
 
+.flash{
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left:0;
+  width: 100%;
+  background-color: red;
+  color: white;
+  text-align: center;
+}
+
 .navbar-default {
   background: linear-gradient(to bottom, #45484d 0%,#000000 100%);
 }

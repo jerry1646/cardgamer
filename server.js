@@ -94,13 +94,6 @@ app.use((req, res, next) => {
   next();
 });
 
-//CONNECT-FLASH TEST
-app.get('/flash', function(req, res){
-  // Set a flash message by passing the key, followed by the value, to req.flash().
-  req.flash('info', 'Flash is back!')
-  res.redirect('/');
-});
-
 // Mount all resource routes
 app.use("/api/users", usersRoutes(db));
 
@@ -175,18 +168,18 @@ app.post("/login", (req, res) => {
     .login(username, password)
     .then(user => {
       req.session.username = username;
-      req.flash('info', `signed in as ${req.session.username}`)
+      // req.flash('info', `signed in as ${req.session.username}`)
       res.redirect("/");
     })
     .catch(e => {
       console.log('Failed login')
       console.error(e);
-      req.flash('info', `FAILED LOGIN!!! USERNAME OR PASSWORD DOES NOT MATCH`)
+      req.flash('info', `Username or password is incorrect`)
       res.redirect("/login");
     });
   } else {
     console.log("Empty username and password");
-    req.flash('info', `GIVE ME STUFF TO WORK WITH`)
+    req.flash('info', `Any fields cannot be empty`)
     res.redirect("/login");
   }
 
@@ -210,6 +203,7 @@ app.post("/register", (req, res) => {
       });
   } else {
     console.log("Empty Fields!");
+    req.flash('info', `Any fields cannot be empty`)
     res.redirect("/register");
   }
 });
