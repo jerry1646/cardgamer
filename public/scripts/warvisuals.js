@@ -58,40 +58,43 @@ const cardRef = {
   54:'j02',
 };
 
-// const message = {
-// // turn: 1,
-// // cards: { id1: 15 },
-// // roundWinner: '',
-// // gameWinner: '',
-// // players:
-// // { id1: { score: 1, playable: false },
-// //   id2: { score: 0, playable: true } }
-// };
+
+
+/*TYPICAL MESSAGE STRUCTURE
+const message = {
+  turn: 1,
+  cards: { id1: 15 },
+  roundWinner: '',
+  gameWinner: '',
+  players: {
+    id1: { score: 1, playable: false },
+    id2: { score: 0, playable: true }
+  }
+};*/
+
 
 //INITIATE SOCKET CONNECTION
 var HOST = location.origin
 var socket = io.connect(HOST);
 
-// var socket = io.connect('http://localhost:8080');
-
-
-//LISTENER FOR SOCKET
-
-//CONNECT SOCKET TO SERVER
+//CONFIRM CONNECT TO SERVER
 socket.on('connect', () => {
   console.log('Successfully connected!');
 
 });
 
-//message both peopel connected and server ready for game
+//message both people connected and server ready for game
 socket.on('ready', (message) => {
   gameId = message.gameId;
   players = message.players;
+
+  //Set opponent UID for later use/lookup
   opponentUID = (players.indexOf(randomlyGeneratedUID) == 1)? players[0]: players[1];
-  console.log(message)
-  console.log('My opponent is: ',opponentUID);
-  console.log(gameId, "this is gameid")
-  $('#op').text(message.usernames[players.indexOf(randomlyGeneratedUID)]);
+
+  //Setup scorecard information upon connect to second player
+  $('#op').text(message.usernames[players.indexOf(opponentUID)]);
+
+  //Setup replay logic
   if ($('#playagain').length > 0 || message.usernames[0] == message.usernames[1]){
     window.location = "/wargame";
   } else {
@@ -118,6 +121,7 @@ socket.on('update', (message) => {
 
 
 // FUNCTIONS -------------------------------------------------------------------------
+
 //initial game load and waiting for other player
 function gameload(){
   //show game container and end button
@@ -154,49 +158,26 @@ function gameconnect(){
   $('.p1draw').show();
   if ($('#scorebox').is(":hidden")) {
     $('#scorebox').slideToggle();}
-    //add game of war visuals to page\
-    // let wargame = `
-    // <div id="cardcontainer">
-    //   <div id="p2hand">
-    //     <img src="/images/cards/purple_back.png" id="p2card">
-    //     <div id="p2carddrawnbox">
-    //     </div>
-    //   </div>
-    // </div>
-    // <section id="middlefield">
-    // </section>
-    // <div id="cardcontainer">
-    //   <div id="p1hand">
-    //     <button id="p1card" type="button">
-    //       <img src="/images/cards/red_back.png" id="p1cardimg">
-    //     </button>
-    //     <div id="p1carddrawnbox">
-    //     </div>
-    //   </div>
-    // </div>`
     let $p1cardcontainer = $("<div>").attr('id', 'cardcontainer');
     let $p2cardcontainer = $("<div>").attr('id', 'cardcontainer');
     let $p1hand = $("<div>").attr('id', 'p1hand');
     let $p2hand = $("<div>").attr('id', 'p2hand');
     let $p2card = $("<img>").attr('src', "/images/cards/purple_back.png").attr('id', 'p2card');;
     let $p1card = $("<img>").attr('src', "/images/cards/red_back.png").attr('id', 'p1card');;
-    // let $p1card = $('<button>').attr('id', 'p1card').attr('type', 'button');;
-    // let $p1cardimg = $("<img>").attr('src', "/images/cards/red_back.png").attr('id', 'p1cardimg');
     let $playfield = $("<section>").attr('id', 'middlefield');
     let $p2cardbox = $("<div>").attr('id', 'p2carddrawnbox');
     let $p1cardbox = $("<div>").attr('id', 'p1carddrawnbox');
     let $draw = $('<button>').addClass('p1draw');
-    // $p1card.append($p1cardimg)
     $p1hand.append($p1card, $p1cardbox);
     $p2hand.append($p2card, $p2cardbox);
     $p1cardcontainer.append($p1hand);
     $p2cardcontainer.append($p2hand);
     $('.wargamecontainer').append($p2cardcontainer, $playfield, $p1cardcontainer);
     $('#middlefield').append("Please Draw a Card");
-    // $('.wargamecontainer').append(wargame);
+
 }
 
-//p1draw
+//p1 draw card function to move card and await p2
 function p1draw(param){
   if (param && $('#p1carddrawn').length > 0){
     setTimeout(function () {
@@ -217,7 +198,7 @@ function p1draw(param){
   }
 }
 
-//p2draw
+//p2 draw card function to move card
 function p2draw(param){
   if (param && $('#p2carddrawn').length > 0){
     setTimeout(function () {
@@ -236,7 +217,7 @@ function p2draw(param){
   }
 }
 
-//card movement
+//card movement upon both players selecting their cards
 function cardmove(param) {
   setTimeout(function () {
     if (param.roundWinner) {
@@ -314,7 +295,7 @@ function gameEndCheck(param){
 }
 
 
-// EVENTS-------------------------------------------------------------------------
+// EVENTS------------------------------------------------------------------
 
 //on page load
 $(document).ready(function() {

@@ -33,7 +33,7 @@ const knexLogger    = require('knex-logger');
 
 // Seperated Routes for each Resource
 const usersRoutes   = require("./routes/users");
-const socketRoutes  = require("./routes/sockets");
+
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -56,13 +56,9 @@ app.use("/styles", sass({
 
 app.use(express.static("public"));
 
-// if(process.env.ENV === 'production') {
-//   app.use(express.static('client/build'));
-// }
-
 app.use(cookieSession({
   name: 'session',
-  keys: ["jbkbjkk"],
+  keys: ["jbkbjkk hkuydhtdhgfhg"],
 
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
@@ -252,19 +248,20 @@ io.on('connection', function(socket) {
   //SOCKET DISCONNECT HANDLING
   socket.on('disconnect', function() {
     console.log("PLAYER DISCONNECTED ---- SOCKET ID: ", socket.id);
-    // playerStatus.disconnected = true;
 
-    // setTimeout(function () {
-    //       if (playerStatus.disconnected) {
-    //         //SET PLAYER TO DISCONNECTED FOR ALL OTHER OBJECTS IN CODE
-    //         let player = socketManager.findBySID(socket.id);
-    //         console.log(`-->DISCONNECTED: ${player.uid} - ${socket.id}`);
-    //         player.connected = false;
-    //         //REMOVE PLAYER REFERENCE FROM SOCKET MANAGER
-    //         socketManager.deleteByUID(player.uid);
-    //         socketManager.printState();
-    //       }
-    //     }, 10000);
+    //Handles Disconnection but bot fully tested and not implemented in production version
+    /*playerStatus.disconnected = true;
+    setTimeout(function () {
+      if (playerStatus.disconnected) {
+        //SET PLAYER TO DISCONNECTED FOR ALL OTHER OBJECTS IN CODE
+        let player = socketManager.findBySID(socket.id);
+        console.log(`-->DISCONNECTED: ${player.uid} - ${socket.id}`);
+        player.connected = false;
+        //REMOVE PLAYER REFERENCE FROM SOCKET MANAGER
+        socketManager.deleteByUID(player.uid);
+        socketManager.printState();
+      }
+    }, 10000);*/
   });
 
   socket.on('register', function (data) {
@@ -272,7 +269,7 @@ io.on('connection', function(socket) {
 
       let uid = data.uid;
       let gameType = data.gameType;
-      //REMEMBER TO ADD THIS TO DIFFERENT QUEUES AND PROCESS GAMETYPE INFORMATION EFFECTIVELY YOU BITCH ASS MUTHAFUCKA
+      //gametyp in place in order to allow future extension into multiple gametypes
 
       //CHECK IF THE INCOMING CONNECTION IS FROM A RECONNECT
       if (socketManager.findByUID(uid)) {
@@ -294,15 +291,13 @@ io.on('connection', function(socket) {
           connected: true
         };
 
-        // console.log('newPlayer: ',newPlayer.username);
-
         socketManager.addToList(newPlayer);
         queueManager.addToQueue(newPlayer);
 
         socketManager.sendMessage(uid, "Added to List...");
         socketManager.printState();
-
       }
+
     } else {
         console.log("Empty registration");
     }
@@ -321,11 +316,13 @@ io.on('connection', function(socket) {
       socketManager.sendMessage(player1.uid,`Joining Game! ID:${gameId}`);
       socketManager.sendMessage(player2.uid,`Joining Game! ID:${gameId}`);
     }
+
   });
 
   socket.on('draw', function (data) {
     console.log(data);
     gameManager.sendMsg('draw', data);
+
   });
 
   socket.on('end-game', function(data) {
@@ -336,25 +333,8 @@ io.on('connection', function(socket) {
     };
     // queueManager.addToQueue(player);
     gameManager.endGame(data.gameId);
+
   });
-
-  // socket.on(<Event Name>, function (<data>) {
-  //  <data> contains gameId,uid,game-data
-  //  socketManager uses gameId and uid to properly handle request
-  //  Passes request to game controller
-  //  Game controller uses a gameObject to send new data back
-
-  // });
-
-
-
-  // socket.on('draw-card ', function (from, msg) {
-
-  // });
-
-  // socket.on('draw-card', function (from, msg) {
-
-  // });
 
 });
 
