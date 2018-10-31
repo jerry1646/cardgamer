@@ -1,29 +1,39 @@
-# Node Skeleton
+# Cardgamer
 
-## Project Setup
+## Introduction
+Cardgamer is a multiplayer card game web app developed by [jinwonn](https://github.com/jinwonn/), [Anael Berrouet](https://github.com/AnaelBerrouet) and [Jerry Song](https://github.com/jerry1646). This minimum viable product is developed as the midterm project for Lighthouse Labs web development bootcamp over the course of 5 days.
 
-1. Create your own empty repo on GitHub
-2. Clone this repository (do not fork)
-  - Suggestion: When cloning, specify a different folder name that is relevant to your project
-3. Remove the git remote: `git remote rm origin`
-4. Add a remote for your origin: `git remote add origin <your github repo URL>`
-5. Push to the new origin: `git push -u origin master`
-6. Verify that the skeleton code now shows up in your repo on GitHub
+Cardgamer allows an user to create an new account, log in and play a game of War with someone else on the page. 
 
-## Getting Started
+It is also deployed on Heroku [here](https://lit-journey-41271.herokuapp.com/) 
 
-1. Create the `.env` by using `.env.example` as a reference: `cp .env.example .env`
-2. Update the .env file with your correct local information
-3. Install dependencies: `npm i`
-4. Fix to binaries for sass: `npm rebuild node-sass`
-5. Run migrations: `npm run knex migrate:latest`
-  - Check the migrations folder to see what gets created in the DB
-6. Run the seed: `npm run knex seed:run`
-  - Check the seeds file to see what gets seeded in the DB
-7. Run the server: `npm run local`
-8. Visit `http://localhost:8080/`
+## Getting Started on Local Server
+
+1. Clone this repository.
+2. Install dependencies using the npm install command.
+3. Update parameters in .env file in order to properly link the app to the database.
+4. Start the web server using the npm start local command. The app will be served at http://localhost:8080/.
+
+## Getting Started on Heroku
+
+1. Go to https://lit-journey-41271.herokuapp.com/
+2. Create an account by clicking "Register" on the navigation bar. If you already have an account, click "Login".
+3. Select "War" to join a game of War, enjoy! (You may want to gather a couple of friends to play together)
+
 
 ## Dependencies
-
+- express.js
+- socket.io
+- pg
+- node-sass-middleware
+- morgan
+- knex, knex-logger
+- gulp
+- ejs
+- dotenv
+- cookie-session
+- connect-flash
+- body-parser
+- bcrypt
 - Node 5.10.x or above
 - NPM 3.8.x or above
