@@ -75,7 +75,8 @@ const message = {
 
 //INITIATE SOCKET CONNECTION
 var HOST = location.origin
-var socket = io.connect(HOST);
+// var socket = io.connect(HOST);
+var socket = io.connect('http://localhost:8080')
 
 //CONFIRM CONNECT TO SERVER
 socket.on('connect', () => {

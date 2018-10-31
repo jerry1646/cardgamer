@@ -238,7 +238,7 @@ io.on('connection', function(socket) {
   // Get username from cookieSession middleware
   let cookie_string = socket.request.headers.cookie;
   let req = { headers : {cookie : cookie_string} }
-  cookieSession({ keys: ["jbkbjkk"] })(req, {}, function(){})
+  cookieSession({ keys: ["jbkbjkk hkuydhtdhgfhg"] })(req, {}, function(){})
   let username = req.session.username;
 
 
